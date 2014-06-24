@@ -1,9 +1,9 @@
                          ----------------------
                              HAProxy how-to
                          ----------------------
-                               version 1.5
+                             version 1.5.1
                              willy tarreau
-                               2014/06/19
+                               2014/06/24
 
 
 1) How to build it

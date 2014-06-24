@@ -1,6 +1,15 @@
 ChangeLog :
 ===========
 
+2014/06/24 : 1.5.1
+    - BUG/MINOR: config: http-request replace-header arg typo
+    - BUG/MINOR: ssl: rejects OCSP response without nextupdate.
+    - BUG/MEDIUM: ssl: Fix to not serve expired OCSP responses.
+    - BUG/MINOR: ssl: Fix OCSP resp update fails with the same certificate configured twice.     (cherry picked from commit 1d3865b096b43b9a6d6a564ffb424ffa6f1ef79f)
+    - BUG/MEDIUM: Consistently use 'check' in process_chk
+    - BUG/MAJOR: session: revert all the crappy client-side timeout changes
+    - BUG/MINOR: logs: properly initialize and count log sockets
+
 2014/06/19 : 1.5.0
     - MEDIUM: ssl: ignored file names ending as '.issuer' or '.ocsp'.
     - MEDIUM: ssl: basic OCSP stapling support.
