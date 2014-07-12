@@ -1,6 +1,34 @@
 ChangeLog :
 ===========
 
+2014/07/12 : 1.5.2
+    - BUG/MEDIUM: backend: Update hash to use unsigned int throughout
+    - BUG/MINOR: ssl: Fix external function in order not to return a pointer on an internal trash buffer.
+    - DOC: expand the docs for the provided stats.
+    - BUG/MEDIUM: unix: do not unlink() abstract namespace sockets upon failure.
+    - MINOR: stats: fix minor typo in HTML page
+    - BUG/MEDIUM: http: fetch "base" is not compatible with set-header
+    - BUG/MINOR: counters: do not untrack counters before logging
+    - BUG/MAJOR: sample: correctly reinitialize sample fetch context before calling sample_process()
+    - MINOR: stick-table: make stktable_fetch_key() indicate why it failed
+    - BUG/MEDIUM: counters: fix track-sc* to wait on unstable contents
+    - BUILD: remove TODO from the spec file and add README
+    - MINOR: log: make MAX_SYSLOG_LEN overridable at build time
+    - MEDIUM: log: support a user-configurable max log line length
+    - DOC: provide an example of how to use ssl_c_sha1
+    - BUILD: http: fix isdigit & isspace warnings on Solaris
+    - BUG/MINOR: listener: set the listener's fd to -1 after deletion
+    - BUG/MEDIUM: unix: failed abstract socket binding is retryable
+    - MEDIUM: listener: implement a per-protocol pause() function
+    - MEDIUM: listener: support rebinding during resume()
+    - BUG/MEDIUM: unix: completely unbind abstract sockets during a pause()
+    - DOC: explicitly mention the limits of abstract namespace sockets
+    - DOC: minor fix on {sc,src}_kbytes_{in,out}
+    - DOC: fix alphabetical sort of converters
+    - BUG/MAJOR: http: correctly rewind the request body after start of forwarding
+    - DOC: remove references to CPU=native in the README
+    - DOC: mention that "compression offload" is ignored in defaults section
+
 2014/06/24 : 1.5.1
     - BUG/MINOR: config: http-request replace-header arg typo
     - BUG/MINOR: ssl: rejects OCSP response without nextupdate.
