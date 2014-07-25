@@ -1,6 +1,14 @@
 ChangeLog :
 ===========
 
+2014/07/25 : 1.5.3
+    - DOC: fix typo in Unix Socket commands
+    - BUG/MEDIUM: connection: fix memory corruption when building a proxy v2 header
+    - BUG/MEDIUM: ssl: Fix a memory leak in DHE key exchange
+    - DOC: mention that Squid correctly responds 400 to PPv2 header
+    - BUG/MINOR: http: base32+src should use the big endian version of base32
+    - BUG/MEDIUM: connection: fix proxy v2 header again!
+
 2014/07/12 : 1.5.2
     - BUG/MEDIUM: backend: Update hash to use unsigned int throughout
     - BUG/MINOR: ssl: Fix external function in order not to return a pointer on an internal trash buffer.

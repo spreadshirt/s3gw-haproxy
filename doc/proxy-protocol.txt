@@ -1,4 +1,4 @@
-2014/06/14                                                        Willy Tarreau
+2014/07/25                                                        Willy Tarreau
                                                            HAProxy Technologies
                                The PROXY protocol
                                  Versions 1 & 2
@@ -21,6 +21,7 @@ Revision history
    2014/05/18 - modify and extend PROXY protocol version 2
    2014/06/11 - fix example code to consider ver+cmd merge
    2014/06/14 - fix v2 header check in example code, and update Forwarded spec
+   2014/07/12 - update list of implementations (add Squid)
 
 
 1. Background
