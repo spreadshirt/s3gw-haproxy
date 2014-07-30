@@ -603,7 +603,16 @@ static sample_to_key_fct sample_to_key[SMP_TYPES][STKTABLE_TYPES] = {
  * no key could be extracted, or a pointer to the converted result stored in
  * static_table_key in format <table_type>. If <smp> is not NULL, it will be reset
  * and its flags will be initialized so that the caller gets a copy of the input
- * sample, and knows why it was not accepted (eg: SMP_F_MAY_CHANGE is present).
+ * sample, and knows why it was not accepted (eg: SMP_F_MAY_CHANGE is present
+ * without SMP_OPT_FINAL). The output will be usable like this :
+ *
+ * return MAY_CHANGE FINAL   Meaning for the sample
+ *  NULL      0        *     Not present and will never be (eg: header)
+ *  NULL      1        0     Not present or unstable, could change (eg: req_len)
+ *  NULL      1        1     Not present, will not change anymore
+ *   smp      0        *     Present and will not change (eg: header)
+ *   smp      1        0     not possible
+ *   smp      1        1     Present, last known value (eg: request length)
  */
 struct stktable_key *stktable_fetch_key(struct stktable *t, struct proxy *px, struct session *l4, void *l7,
                                         unsigned int opt, struct sample_expr *expr, struct sample *smp)
