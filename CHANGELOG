@@ -1,6 +1,22 @@
 ChangeLog :
 ===========
 
+2014/09/02 : 1.5.4
+    - BUG: config: error in http-response replace-header number of arguments
+    - BUG/MINOR: Fix search for -p argument in systemd wrapper.
+    - BUG/MEDIUM: auth: fix segfault with http-auth and a configuration with an unknown encryption algorithm
+    - BUG/MEDIUM: config: userlists should ensure that encrypted passwords are supported
+    - MEDIUM: connection: add new bit in Proxy Protocol V2
+    - BUG/MINOR: server: move the directive #endif to the end of file
+    - BUG/MEDIUM: http: tarpit timeout is reset
+    - BUG/MAJOR: tcp: fix a possible busy spinning loop in content track-sc*
+    - BUG/MEDIUM: http: fix inverted condition in pat_match_meth()
+    - BUG/MEDIUM: http: fix improper parsing of HTTP methods for use with ACLs
+    - BUG/MINOR: pattern: remove useless allocation of unused trash in pat_parse_reg()
+    - BUG/MEDIUM: acl: correctly compute the output type when a converter is used
+    - CLEANUP: acl: cleanup some of the redundancy and spaghetti after last fix
+    - BUG/CRITICAL: http: don't update msg->sov once data start to leave the buffer
+
 2014/07/25 : 1.5.3
     - DOC: fix typo in Unix Socket commands
     - BUG/MEDIUM: connection: fix memory corruption when building a proxy v2 header
