@@ -6165,9 +6165,8 @@ int check_config_validity()
 				/* we force the backend to be present on at least all of
 				 * the frontend's processes.
 				 */
-				if (target->bind_proc)
-					target->bind_proc = curproxy->bind_proc ?
-						(target->bind_proc | curproxy->bind_proc) : 0;
+				target->bind_proc = curproxy->bind_proc ?
+					(target->bind_proc | curproxy->bind_proc) : 0;
 
 				/* Emit a warning if this proxy also has some servers */
 				if (curproxy->srv) {
@@ -6203,9 +6202,8 @@ int check_config_validity()
 					/* we force the backend to be present on at least all of
 					 * the frontend's processes.
 					 */
-					if (target->bind_proc)
-						target->bind_proc = curproxy->bind_proc ?
-							(target->bind_proc | curproxy->bind_proc) : 0;
+					target->bind_proc = curproxy->bind_proc ?
+						(target->bind_proc | curproxy->bind_proc) : 0;
 				}
 			}
 		}
@@ -6257,9 +6255,8 @@ int check_config_validity()
 				/* we force the backend to be present on at least all of
 				 * the frontend's processes.
 				 */
-				if (target->bind_proc)
-					target->bind_proc = curproxy->bind_proc ?
-						(target->bind_proc | curproxy->bind_proc) : 0;
+				target->bind_proc = curproxy->bind_proc ?
+					(target->bind_proc | curproxy->bind_proc) : 0;
 			}
 		}
 
