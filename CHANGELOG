@@ -1,6 +1,30 @@
 ChangeLog :
 ===========
 
+2014/10/08 : 1.5.5
+    - DOC: Address issue where documentation is excluded due to a gitignore rule.
+    - MEDIUM: Improve signal handling in systemd wrapper.
+    - BUG/MINOR: config: don't propagate process binding for dynamic use_backend
+    - MINOR: Also accept SIGHUP/SIGTERM in systemd-wrapper
+    - DOC: clearly state that the "show sess" output format is not fixed
+    - MINOR: stats: fix minor typo fix in stats_dump_errors_to_buffer()
+    - DOC: indicate in the doc that track-sc* can wait if data are missing
+    - MEDIUM: http: enable header manipulation for 101 responses
+    - BUG/MEDIUM: config: propagate frontend to backend process binding again.
+    - MEDIUM: config: properly propagate process binding between proxies
+    - MEDIUM: config: make the frontends automatically bind to the listeners' processes
+    - MEDIUM: config: compute the exact bind-process before listener's maxaccept
+    - MEDIUM: config: only warn if stats are attached to multi-process bind directives
+    - MEDIUM: config: report it when tcp-request rules are misplaced
+    - MINOR: config: detect the case where a tcp-request content rule has no inspect-delay
+    - MEDIUM: systemd-wrapper: support multiple executable versions and names
+    - BUG/MEDIUM: remove debugging code from systemd-wrapper
+    - BUG/MEDIUM: http: adjust close mode when switching to backend
+    - BUG/MINOR: config: don't propagate process binding on fatal errors.
+    - BUG/MEDIUM: check: rule-less tcp-check must detect connect failures
+    - BUG/MINOR: tcp-check: report the correct failed step in the status
+    - DOC: indicate that weight zero is reported as DRAIN
+
 2014/09/02 : 1.5.4
     - BUG: config: error in http-response replace-header number of arguments
     - BUG/MINOR: Fix search for -p argument in systemd wrapper.
