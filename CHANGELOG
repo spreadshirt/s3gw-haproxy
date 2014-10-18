@@ -1,6 +1,13 @@
 ChangeLog :
 ===========
 
+2014/10/18 : 1.5.6
+    - BUG/MEDIUM: systemd: set KillMode to 'mixed'
+    - MINOR: systemd: Check configuration before start
+    - BUG/MEDIUM: config: avoid skipping disabled proxies
+    - BUG/MINOR: config: do not accept more track-sc than configured
+    - BUG/MEDIUM: backend: fix URI hash when a query string is present
+
 2014/10/08 : 1.5.5
     - DOC: Address issue where documentation is excluded due to a gitignore rule.
     - MEDIUM: Improve signal handling in systemd wrapper.
