@@ -1,6 +1,17 @@
 ChangeLog :
 ===========
 
+2014/10/30 : 1.5.7
+    - BUG/MEDIUM: regex: fix pcre_study error handling
+    - BUG/MINOR: log: fix request flags when keep-alive is enabled
+    - MINOR: ssl: add fetchs 'ssl_c_der' and 'ssl_f_der' to return DER formatted certs
+    - MINOR: ssl: add statement to force some ssl options in global.
+    - BUG/MINOR: ssl: correctly initialize ssl ctx for invalid certificates
+    - BUG/MEDIUM: http: don't dump debug headers on MSG_ERROR
+    - BUG/MAJOR: cli: explicitly call cli_release_handler() upon error
+    - BUG/MEDIUM: tcp: fix outgoing polling based on proxy protocol
+    - BUG/MEDIUM: tcp: don't use SO_ORIGINAL_DST on non-AF_INET sockets
+
 2014/10/18 : 1.5.6
     - BUG/MEDIUM: systemd: set KillMode to 'mixed'
     - MINOR: systemd: Check configuration before start
