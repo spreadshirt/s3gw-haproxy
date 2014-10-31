@@ -1,6 +1,10 @@
 ChangeLog :
 ===========
 
+2014/10/31 : 1.5.8
+    - BUG/MAJOR: buffer: check the space left is enough or not when input data in a buffer is wrapped
+    - BUG/BUILD: revert accidental change in the makefile from latest SSL fix
+
 2014/10/30 : 1.5.7
     - BUG/MEDIUM: regex: fix pcre_study error handling
     - BUG/MINOR: log: fix request flags when keep-alive is enabled
