@@ -1413,7 +1413,7 @@ static int connect_chk(struct task *t)
 
 	/* prepare a new connection */
 	conn_init(conn);
-	conn_prepare(conn, s->check_common.proto, s->check_common.xprt);
+	conn_prepare(conn, s->check_common.proto, check->xprt);
 	conn_attach(conn, check, &check_conn_cb);
 	conn->target = &s->obj_type;
 
