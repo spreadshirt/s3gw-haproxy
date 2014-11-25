@@ -1,6 +1,22 @@
 ChangeLog :
 ===========
 
+2014/11/26 : 1.5.9
+    - BUILD: fix "make install" to support spaces in the install dirs
+    - BUG/MEDIUM: checks: fix conflicts between agent checks and ssl healthchecks
+    - BUG/MEDIUM: ssl: fix bad ssl context init can cause segfault in case of OOM.
+    - BUG/MINOR: samples: fix unnecessary memcopy converting binary to string.
+    - BUG/MEDIUM: connection: sanitize PPv2 header length before parsing address information
+    - BUG/MEDIUM: pattern: don't load more than once a pattern list.
+    - BUG/MEDIUM: ssl: force a full GC in case of memory shortage
+    - BUG/MINOR: config: don't inherit the default balance algorithm in frontends
+    - BUG/MAJOR: frontend: initialize capture pointers earlier
+    - BUG/MINOR: stats: correctly set the request/response analysers
+    - DOC: fix typo in the body parser documentation for msg.sov
+    - BUG/MINOR: peers: the buffer size is global.tune.bufsize, not trash.size
+    - MINOR: sample: add a few basic internal fetches (nbproc, proc, stopping)
+    - BUG/MAJOR: sessions: unlink session from list on out of memory
+
 2014/10/31 : 1.5.8
     - BUG/MAJOR: buffer: check the space left is enough or not when input data in a buffer is wrapped
     - BUG/BUILD: revert accidental change in the makefile from latest SSL fix
