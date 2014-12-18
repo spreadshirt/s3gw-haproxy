@@ -6006,7 +6006,7 @@ void propagate_processes(struct proxy *from, struct proxy *to)
 		from = to;
 	}
 
-	if (!from->cap & PR_CAP_FE)
+	if (!(from->cap & PR_CAP_FE))
 		return;
 
 	/* default_backend */
