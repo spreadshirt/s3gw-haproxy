@@ -6009,6 +6009,9 @@ void propagate_processes(struct proxy *from, struct proxy *to)
 	if (!(from->cap & PR_CAP_FE))
 		return;
 
+	if (from->state == PR_STSTOPPED)
+		return;
+
 	/* default_backend */
 	if (from->defbe.be)
 		propagate_processes(from, from->defbe.be);
