@@ -1,6 +1,24 @@
 ChangeLog :
 ===========
 
+2014/12/31 : 1.5.10
+    - DOC: fix a few typos
+    - BUG/MINOR: http: fix typo: "401 Unauthorized" => "407 Unauthorized"
+    - BUG/MINOR: parse: refer curproxy instead of proxy
+    - DOC: httplog does not support 'no'
+    - MINOR: map/acl/dumpstats: remove the "Done." message
+    - BUG/MEDIUM: sample: fix random number upper-bound
+    - BUG/MEDIUM: patterns: previous fix was incomplete
+    - BUG/MEDIUM: payload: ensure that a request channel is available
+    - BUG/MINOR: tcp-check: don't condition data polling on check type
+    - BUG/MEDIUM: tcp-check: don't rely on random memory contents
+    - BUG/MEDIUM: tcp-checks: disable quick-ack unless next rule is an expect
+    - BUG/MINOR: config: fix typo in condition when propagating process binding
+    - BUG/MEDIUM: config: do not propagate processes between stopped processes
+    - BUG/MAJOR: stream-int: properly check the memory allocation return
+    - BUG/MEDIUM: memory: fix freeing logic in pool_gc2()
+    - BUG/MEDIUM: compression: correctly report zlib_mem
+
 2014/11/26 : 1.5.9
     - BUILD: fix "make install" to support spaces in the install dirs
     - BUG/MEDIUM: checks: fix conflicts between agent checks and ssl healthchecks
