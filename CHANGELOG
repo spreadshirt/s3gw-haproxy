@@ -1,6 +1,27 @@
 ChangeLog :
 ===========
 
+2015/02/01 : 1.5.11
+    - BUG/MEDIUM: backend: correctly detect the domain when use_domain_only is used
+    - MINOR: ssl: load certificates in alphabetical order
+    - BUG/MINOR: checks: prevent http keep-alive with http-check expect
+    - BUG/MEDIUM: Do not set agent health to zero if server is disabled in config
+    - MEDIUM/BUG: Only explicitly report "DOWN (agent)" if the agent health is zero
+    - BUG/MINOR: stats:Fix incorrect printf type.
+    - DOC: add missing entry for log-format and clarify the text
+    - BUG/MEDIUM: http: fix header removal when previous header ends with pure LF
+    - BUG/MEDIUM: channel: fix possible integer overflow on reserved size computation
+    - BUG/MINOR: channel: compare to_forward with buf->i, not buf->size
+    - MINOR: channel: add channel_in_transit()
+    - MEDIUM: channel: make buffer_reserved() use channel_in_transit()
+    - MEDIUM: channel: make bi_avail() use channel_in_transit()
+    - BUG/MEDIUM: channel: don't schedule data in transit for leaving until connected
+    - BUG/MAJOR: log: don't try to emit a log if no logger is set
+    - BUG/MINOR: args: add missing entry for ARGT_MAP in arg_type_names
+    - BUG/MEDIUM: http: make http-request set-header compute the string before removal
+    - BUG/MINOR: http: fix incorrect header value offset in replace-hdr/replace-value
+    - BUG/MINOR: http: abort request processing on filter failure
+
 2014/12/31 : 1.5.10
     - DOC: fix a few typos
     - BUG/MINOR: http: fix typo: "401 Unauthorized" => "407 Unauthorized"
