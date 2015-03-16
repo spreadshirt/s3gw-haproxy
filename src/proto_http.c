@@ -3206,7 +3206,7 @@ static int http_replace_value(struct my_regex *re, char *dst, uint dst_size, cha
 
 		/* look for delim. */
 		p_delim = p;
-		while (p_delim < p + len && *p_delim != delim)
+		while (p_delim < val + len && *p_delim != delim)
 			p_delim++;
 
 		if (regex_exec_match2(re, p, p_delim-p, MAX_MATCH, pmatch)) {
@@ -3230,7 +3230,7 @@ static int http_replace_value(struct my_regex *re, char *dst, uint dst_size, cha
 			return -1;
 
 		/* end of the replacements. */
-		if (p_delim >= p + len)
+		if (p_delim >= val + len)
 			break;
 
 		/* Next part. */
