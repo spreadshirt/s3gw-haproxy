@@ -99,6 +99,7 @@ static inline void si_reset(struct stream_interface *si, void *owner)
 	si->flags          = SI_FL_NONE;
 	si->end            = NULL;
 	si->state          = si->prev_state = SI_ST_INI;
+	si->ops            = &si_embedded_ops;
 }
 
 /* sets the current and previous state of a stream interface to <state>. This
@@ -131,12 +132,12 @@ static inline void si_release_endpoint(struct stream_interface *si)
 		appctx_free(appctx); /* we share the connection pool */
 	}
 	si->end = NULL;
+	si->ops = &si_embedded_ops;
 }
 
 static inline void si_detach(struct stream_interface *si)
 {
 	si_release_endpoint(si);
-	si->ops = &si_embedded_ops;
 }
 
 /* Turn a possibly existing connection endpoint of stream interface <si> to
