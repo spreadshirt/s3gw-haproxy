@@ -2620,6 +2620,9 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 			if (txn->flags & TX_WAIT_NEXT_RQ)
 				goto failed_keep_alive;
 
+			if (s->fe->options & PR_O_IGNORE_PRB)
+				goto failed_keep_alive;
+
 			/* we cannot return any message on error */
 			if (msg->err_pos >= 0) {
 				http_capture_bad_message(&s->fe->invalid_req, s, msg, msg->msg_state, s->fe);
@@ -2650,6 +2653,9 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 			if (txn->flags & TX_WAIT_NEXT_RQ)
 				goto failed_keep_alive;
 
+			if (s->fe->options & PR_O_IGNORE_PRB)
+				goto failed_keep_alive;
+
 			/* read timeout : give up with an error message. */
 			if (msg->err_pos >= 0) {
 				http_capture_bad_message(&s->fe->invalid_req, s, msg, msg->msg_state, s->fe);
@@ -2677,6 +2683,9 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 				s->flags |= SN_ERR_CLICL;
 
 			if (txn->flags & TX_WAIT_NEXT_RQ)
+				goto failed_keep_alive;
+
+			if (s->fe->options & PR_O_IGNORE_PRB)
 				goto failed_keep_alive;
 
 			if (msg->err_pos >= 0)
