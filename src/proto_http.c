@@ -4648,7 +4648,7 @@ int http_wait_for_request_body(struct session *s, struct channel *req, int an_bi
 
 	if (!(msg->flags & HTTP_MSGF_TE_CHNK)) {
 		/* We're in content-length mode, we just have to wait for enough data. */
-		if (req->buf->i - msg->sov < msg->body_len)
+		if (http_body_bytes(msg) < msg->body_len)
 			goto missing_data;
 
 		/* OK we have everything we need now */
@@ -4673,13 +4673,14 @@ int http_wait_for_request_body(struct session *s, struct channel *req, int an_bi
 	}
 
 	/* Now we're in HTTP_MSG_DATA or HTTP_MSG_TRAILERS state.
-	 * We have the first data byte is in msg->sov. We're waiting for at
-	 * least a whole chunk or the whole content length bytes after msg->sov.
+	 * We have the first data byte is in msg->sov + msg->sol. We're waiting
+	 * for at least a whole chunk or the whole content length bytes after
+	 * msg->sov + msg->sol.
 	 */
 	if (msg->msg_state == HTTP_MSG_TRAILERS)
 		goto http_end;
 
-	if (req->buf->i - msg->sov >= msg->body_len)   /* we have enough bytes now */
+	if (http_body_bytes(msg) >= msg->body_len)   /* we have enough bytes now */
 		goto http_end;
 
  missing_data:
