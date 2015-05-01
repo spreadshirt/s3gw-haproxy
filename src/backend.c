@@ -309,6 +309,9 @@ struct server *get_server_ph_post(struct session *s)
 	if (len == 0)
 		return NULL;
 
+	if (len > req->buf->data + req->buf->size - p)
+		len = req->buf->data + req->buf->size - p;
+
 	if (px->lbprm.tot_weight == 0)
 		return NULL;
 
