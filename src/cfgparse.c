@@ -1841,6 +1841,7 @@ int cfg_parse_peers(const char *file, int linenum, char **args, int kwm)
 				curpeers->peers_fe->options2 |= PR_O2_INDEPSTR | PR_O2_SMARTCON | PR_O2_SMARTACC;
 				curpeers->peers_fe->conf.args.file = curpeers->peers_fe->conf.file = strdup(file);
 				curpeers->peers_fe->conf.args.line = curpeers->peers_fe->conf.line = linenum;
+				curpeers->peers_fe->bind_proc = 0; /* will be filled by users */
 
 				bind_conf = bind_conf_alloc(&curpeers->peers_fe->conf.bind, file, linenum, args[2]);
 
@@ -7398,6 +7399,11 @@ out_uri_auth_compat:
 			if (curproxy->options2 & cfg_opts2[optnum].val)
 				global.last_checks |= cfg_opts2[optnum].checks;
 	}
+
+	/* compute the required process bindings for the peers */
+	for (curproxy = proxy; curproxy; curproxy = curproxy->next)
+		if (curproxy->table.peers.p)
+			curproxy->table.peers.p->peers_fe->bind_proc |= curproxy->bind_proc;
 
 	if (peers) {
 		struct peers *curpeers = peers, **last;
