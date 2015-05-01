@@ -6108,6 +6108,8 @@ int check_config_validity()
 		if (curproxy->state == PR_STSTOPPED) {
 			/* ensure we don't keep listeners uselessly bound */
 			stop_proxy(curproxy);
+			free((void *)curproxy->table.peers.name);
+			curproxy->table.peers.p = NULL;
 			continue;
 		}
 
