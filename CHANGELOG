@@ -1,6 +1,38 @@
 ChangeLog :
 ===========
 
+2015/05/02 : 1.5.12
+    - BUG/MINOR: ssl: Display correct filename in error message
+    - DOC: Fix L4TOUT typo in documentation
+    - BUG/MEDIUM: Do not consider an agent check as failed on L7 error
+    - BUG/MINOR: pattern: error message missing
+    - BUG/MEDIUM: pattern: some entries are not deleted with case insensitive match
+    - BUG/MEDIUM: buffer: one byte miss in buffer free space check
+    - BUG/MAJOR: http: don't read past buffer's end in http_replace_value
+    - BUG/MEDIUM: http: the function "(req|res)-replace-value" doesn't respect the HTTP syntax
+    - BUG/MEDIUM: peers: correctly configure the client timeout
+    - BUG/MINOR: compression: consider the expansion factor in init
+    - BUG/MEDIUM: http: hdr_cnt would not count any header when called without name
+    - BUG/MEDIUM: listener: don't report an error when resuming unbound listeners
+    - BUG/MEDIUM: init: don't limit cpu-map to the first 32 processes only
+    - BUG/MEDIUM: stream-int: always reset si->ops when si->end is nullified
+    - BUG/MEDIUM: http: remove content-length from chunked messages
+    - DOC: http: update the comments about the rules for determining transfer-length
+    - BUG/MEDIUM: http: do not restrict parsing of transfer-encoding to HTTP/1.1
+    - BUG/MEDIUM: http: incorrect transfer-coding in the request is a bad request
+    - BUG/MEDIUM: http: remove content-length form responses with bad transfer-encoding
+    - MEDIUM: http: restrict the HTTP version token to 1 digit as per RFC7230
+    - MEDIUM: http: add option-ignore-probes to get rid of the floods of 408
+    - BUG/MINOR: config: clear proxy->table.peers.p for disabled proxies
+    - MINOR: stick-table: don't attach to peers in stopped state
+    - MEDIUM: config: initialize stick-tables after peers, not before
+    - MEDIUM: peers: add the ability to disable a peers section
+    - DOC: document option http-ignore-probes
+    - DOC: fix the comments about the meaning of msg->sol in HTTP
+    - BUG/MEDIUM: http: wait for the exact amount of body bytes in wait_for_request_body
+    - BUG/MAJOR: http: prevent risk of reading past end with balance url_param
+    - DOC: update the doc on the proxy protocol
+
 2015/02/01 : 1.5.11
     - BUG/MEDIUM: backend: correctly detect the domain when use_domain_only is used
     - MINOR: ssl: load certificates in alphabetical order
