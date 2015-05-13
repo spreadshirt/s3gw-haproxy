@@ -4362,20 +4362,16 @@ stats_error_parsing:
 			const char *ptr_arg;
 			int cur_arg;
 			struct tcpcheck_rule *tcpcheck;
-			struct list *l;
 
 			/* check if first rule is also a 'connect' action */
-			l = (struct list *)&curproxy->tcpcheck_rules;
-			if (l->p != l->n) {
-				tcpcheck = (struct tcpcheck_rule *)l->n;
+			tcpcheck = LIST_NEXT(&curproxy->tcpcheck_rules, struct tcpcheck_rule *, list);
 
-				if (&tcpcheck->list != &curproxy->tcpcheck_rules
-				    && tcpcheck->action != TCPCHK_ACT_CONNECT) {
-					Alert("parsing [%s:%d] : first step MUST also be a 'connect' when there is a 'connect' step in the tcp-check ruleset.\n",
-					      file, linenum);
-					err_code |= ERR_ALERT | ERR_FATAL;
-					goto out;
-				}
+			if (&tcpcheck->list != &curproxy->tcpcheck_rules
+			    && tcpcheck->action != TCPCHK_ACT_CONNECT) {
+				Alert("parsing [%s:%d] : first step MUST also be a 'connect' when there is a 'connect' step in the tcp-check ruleset.\n",
+				      file, linenum);
+				err_code |= ERR_ALERT | ERR_FATAL;
+				goto out;
 			}
 
 			cur_arg = 2;
