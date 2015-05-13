@@ -2057,6 +2057,9 @@ static void tcpcheck_main(struct connection *conn)
 			/* allow next rule */
 			check->current_step = (struct tcpcheck_rule *)check->current_step->list.n;
 
+			if (&check->current_step->list == head)
+				break;
+
 			/* don't do anything until the connection is established */
 			if (!(conn->flags & CO_FL_CONNECTED)) {
 				/* update expire time, should be done by process_chk */
@@ -2110,6 +2113,9 @@ static void tcpcheck_main(struct connection *conn)
 
 			/* go to next rule and try to send */
 			check->current_step = (struct tcpcheck_rule *)check->current_step->list.n;
+
+			if (&check->current_step->list == head)
+				break;
 		} /* end 'send' */
 		else if (check->current_step->action == TCPCHK_ACT_EXPECT) {
 			if (unlikely(check->result == CHK_RES_FAILED))
@@ -2196,6 +2202,9 @@ static void tcpcheck_main(struct connection *conn)
 					/* allow next rule */
 					check->current_step = (struct tcpcheck_rule *)check->current_step->list.n;
 
+					if (&check->current_step->list == head)
+						break;
+
 					if (check->current_step->action == TCPCHK_ACT_EXPECT)
 						goto tcpcheck_expect;
 					__conn_data_stop_recv(conn);
@@ -2207,6 +2216,9 @@ static void tcpcheck_main(struct connection *conn)
 				if (check->current_step->inverse) {
 					/* allow next rule */
 					check->current_step = (struct tcpcheck_rule *)check->current_step->list.n;
+
+					if (&check->current_step->list == head)
+						break;
 
 					if (check->current_step->action == TCPCHK_ACT_EXPECT)
 						goto tcpcheck_expect;
