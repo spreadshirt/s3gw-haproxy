@@ -1,6 +1,37 @@
 ChangeLog :
 ===========
 
+2015/06/26 : 1.5.13
+    - BUG/MINOR: check: fix tcpcheck error message
+    - CLEANUP: deinit: remove codes for cleaning p->block_rules
+    - DOC: Update doc about weight, act and bck fields in the statistics
+    - MINOR: ssl: add a destructor to free allocated SSL ressources
+    - BUG/MEDIUM: ssl: fix tune.ssl.default-dh-param value being overwritten
+    - MEDIUM: ssl: replace standards DH groups with custom ones
+    - BUG/MINOR: debug: display (null) in place of "meth"
+    - BUG/MINOR: cfgparse: fix typo in 'option httplog' error message
+    - BUG/MEDIUM: cfgparse: segfault when userlist is misused
+    - BUG/MEDIUM: stats: properly initialize the scope before dumping stats
+    - BUG/MEDIUM: http: don't forward client shutdown without NOLINGER except for tunnels
+    - CLEANUP: checks: fix double usage of cur / current_step in tcp-checks
+    - BUG/MEDIUM: checks: do not dereference head of a tcp-check at the end
+    - CLEANUP: checks: simplify the loop processing of tcp-checks
+    - BUG/MAJOR: checks: always check for end of list before proceeding
+    - BUG/MEDIUM: checks: do not dereference a list as a tcpcheck struct
+    - BUG/MEDIUM: peers: apply a random reconnection timeout
+    - BUG/MINOR: ssl: fix smp_fetch_ssl_fc_session_id
+    - MEDIUM: init: don't stop proxies in parent process when exiting
+    - MINOR: peers: store the pointer to the signal handler
+    - MEDIUM: peers: unregister peers that were never started
+    - MEDIUM: config: propagate the table's process list to the peers sections
+    - MEDIUM: init: stop any peers section not bound to the correct process
+    - MEDIUM: config: validate that peers sections are bound to exactly one process
+    - MAJOR: peers: allow peers section to be used with nbproc > 1
+    - DOC: relax the peers restriction to single-process
+    - CLEANUP: config: fix misleading information in error message.
+    - MINOR: config: report the number of processes using a peers section in the error case
+    - BUG/MEDIUM: config: properly compute the default number of processes for a proxy
+
 2015/05/02 : 1.5.12
     - BUG/MINOR: ssl: Display correct filename in error message
     - DOC: Fix L4TOUT typo in documentation
