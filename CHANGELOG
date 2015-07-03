@@ -1,6 +1,10 @@
 ChangeLog :
 ===========
 
+2015/07/03 : 1.5.14
+    - BUILD/MINOR: tools: rename popcount to my_popcountl
+    - BUG/MAJOR: buffers: make the buffer_slow_realign() function respect output data
+
 2015/06/26 : 1.5.13
     - BUG/MINOR: check: fix tcpcheck error message
     - CLEANUP: deinit: remove codes for cleaning p->block_rules
