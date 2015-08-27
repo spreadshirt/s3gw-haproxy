@@ -466,6 +466,12 @@ struct http_res_rule {
 	} arg;                                 /* arguments used by some actions */
 };
 
+struct s3gateway {
+	const char *copy_source;
+	int copy_source_len;
+	int ignore:1;
+};
+
 /* This is an HTTP transaction. It contains both a request message and a
  * response message (which can be empty).
  */
@@ -486,6 +492,7 @@ struct http_txn {
 	int cookie_last_date;           /* if non-zero, last date the expirable cookie was set/seen */
 
 	struct http_auth_data auth;	/* HTTP auth data */
+	struct s3gateway s3gw;		/* S3 gateway specific data */
 };
 
 

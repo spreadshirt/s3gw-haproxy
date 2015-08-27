@@ -66,6 +66,10 @@
 #include <proto/task.h>
 #include <proto/pattern.h>
 
+#ifdef USE_S3GW
+#include "s3gw.h"
+#endif /* S3GW */
+
 const char HTTP_100[] =
 	"HTTP/1.1 100 Continue\r\n\r\n";
 
@@ -2980,6 +2984,30 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 	 *       number of octets received prior to the server closing the
 	 *       connection.
 	 */
+
+	char buffer[1024];
+	memset(buffer, '\0', 1024);
+#ifdef USE_S3GW
+	if (s3gw_enable) {
+		/* TODO: not use the first appearance, use the latest one */
+		ctx.idx = 0;
+		if (http_find_header2("X-Notifcations", 14, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {
+			if (ctx.vlen == 5 && strncasecmp(ctx.line + ctx.val, "False", 5)) {
+				txn->s3gw.ignore = 1;
+				/* goto no_notification; should make it faster */
+			}
+		}
+
+		if (!txn->s3gw.ignore) {
+			ctx.idx = 0;
+			if (http_find_header2("x-amz-copy-source", 17, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {
+				txn->s3gw.copy_source = ctx.line + ctx.val;
+				txn->s3gw.copy_source_len = ctx.vlen;
+			}
+		}
+	}
+//no_notification:
+#endif /* S3GW */
 
 	ctx.idx = 0;
 	/* set TE_CHNK and XFER_LEN only if "chunked" is seen last */
@@ -5952,6 +5980,11 @@ int http_wait_for_response(struct session *s, struct channel *rep, int an_bit)
 	/*
 	 * 2: check for cacheability.
 	 */
+
+#ifdef USE_S3GW
+	if (!txn->s3gw.ignore)
+		s3gw_enqueue(txn);
+#endif /* S3GW */
 
 	switch (txn->status) {
 	case 100:
