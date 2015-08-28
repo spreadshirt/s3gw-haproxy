@@ -1,6 +1,8 @@
 #ifndef S3GW_H
 #define S3GW_H
 
+#include <common/mini-clist.h>
+
 struct http_txn;
 
 struct s3gw_buckets {
