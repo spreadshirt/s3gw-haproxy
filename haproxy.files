@@ -199,6 +199,8 @@ src/time.c
 src/trace.c
 src/uri_auth.c
 src/s3gw.c
+src/haproxy_redis.c
+src/haproxy_redis.h
 tests/filltab25.c
 tests/ip-hash.c
 tests/reset.c
