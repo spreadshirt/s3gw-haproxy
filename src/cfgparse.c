@@ -1301,6 +1301,9 @@ int cfg_parse_global(const char *file, int linenum, char **args, int kwm)
 		}
 	}
 #ifdef USE_S3GW
+	else if (!strcmp(args[0], "s3.enable")) {
+		global.s3.enabled = 1;
+	}
 	else if (!strcmp(args[0], "s3.bind_ip")) {
 		global.s3.bind_ip = strdup(args[1]);
 	}
