@@ -6,6 +6,8 @@
 #include <types/proto_http.h>
 #include <proto/proto_http.h>
 
+#include "haproxy_redis.h"
+
 static struct redisAsyncContext *ctx = NULL;
 static struct s3gw_config {
 	const char **buckets;
@@ -41,6 +43,8 @@ void s3gw_connect() {
 	if (!ctx) {
 		// TODO: write a log message
 	}
+
+	redisHaAttach(ctx);
 }
 
 void s3gw_deinit() {
