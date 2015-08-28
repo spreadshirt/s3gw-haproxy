@@ -1670,7 +1670,6 @@ int main(int argc, char **argv)
 
 	protocol_enable_all();
 
-	s3gw_configure(NULL, 0, "prefix", "0.0.0.0", 6379, NULL);
 	s3gw_connect();
 	/*
 	 * That's it : the central polling loop. Run until we stop.

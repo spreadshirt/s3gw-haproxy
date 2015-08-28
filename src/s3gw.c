@@ -6,34 +6,41 @@
 #include <types/proto_http.h>
 #include <proto/proto_http.h>
 
+#include <types/global.h>
+
 #include "haproxy_redis.h"
 
 static struct redisAsyncContext *ctx = NULL;
 static struct s3gw_config {
 	const char **buckets;
 	int buckets_len;
-	const char *bucket_prefix;
-	const char *ip;
-	int port;
-	const char *bind_ip;
-	const char *path;
 } config;
 
-void s3gw_configure(const char **buckets, int buckets_len, const char *bucket_prefix,
-	      const char *ip, int port, const char *path) {
-	config.buckets = buckets;
-	config.buckets_len = buckets_len;
-	config.bucket_prefix = bucket_prefix;
-	config.ip = ip;
-	config.port = port;
-	config.path = path;
+/* does this really safes some runtime? */
+static void copy_buckets_config() {
+	if (config.buckets == NULL) {
+		struct s3gw_buckets *buckets;
+		int i = 0;
+
+		list_for_each_entry(buckets, &global.s3.buckets, list)
+				i++;
+
+		config.buckets = calloc(i, sizeof(char));
+		config.buckets_len = i;
+		i = 0;
+		list_for_each_entry(buckets, &global.s3.buckets, list) {
+			config.buckets[i++] = buckets->bucket;
+		}
+	}
 }
 
 void s3gw_connect() {
-	if (config.ip && config.port) {
-		ctx = redisAsyncConnect(config.ip, config.port);
-	} else if (config.path) {
-		ctx = redisAsyncConnectUnix(config.path);
+	copy_buckets_config();
+
+	if (global.s3.redis_ip && global.s3.redis_port) {
+		ctx = redisAsyncConnect(global.s3.redis_ip, global.s3.redis_port);
+	} else if (global.s3.unix_path) {
+		ctx = redisAsyncConnectUnix(global.s3.unix_path);
 	} else {
 		// TODO: err message
 	}
