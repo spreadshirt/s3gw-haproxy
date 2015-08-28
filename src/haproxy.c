@@ -168,6 +168,14 @@ struct global global = {
 	.maxsslconn = DEFAULT_MAXSSLCONN,
 #endif
 #endif
+#ifdef USE_S3GW
+	.s3 = {
+		.buckets = LIST_HEAD_INIT(global.s3.buckets),
+		.bucket_prefix = "s3notifications",
+		.redis_ip = "127.0.0.1",
+		.redis_port = 6379,
+	}
+#endif
 	/* others NULL OK */
 };
 
