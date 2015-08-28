@@ -1670,7 +1670,9 @@ int main(int argc, char **argv)
 
 	protocol_enable_all();
 
-	s3gw_connect();
+	if (global.s3.enabled)
+		s3gw_connect();
+
 	/*
 	 * That's it : the central polling loop. Run until we stop.
 	 */
