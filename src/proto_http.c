@@ -2988,7 +2988,7 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 	char buffer[1024];
 	memset(buffer, '\0', 1024);
 #ifdef USE_S3GW
-	if (s3gw_enable) {
+	if (global.s3.enabled) {
 		/* TODO: not use the first appearance, use the latest one */
 		ctx.idx = 0;
 		if (http_find_header2("X-Notifcations", 14, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {

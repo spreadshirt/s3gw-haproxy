@@ -158,6 +158,7 @@ struct global {
 	} unix_bind;
 #ifdef USE_S3GW
 	struct {
+		int enabled;
 		struct list buckets;
 		char *bucket_prefix;
 		char *redis_ip;

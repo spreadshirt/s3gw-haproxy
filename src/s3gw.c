@@ -19,8 +19,6 @@ static struct s3gw_config {
 	const char *path;
 } config;
 
-int s3gw_enable = 0;
-
 void s3gw_configure(const char **buckets, int buckets_len, const char *bucket_prefix,
 	      const char *ip, int port, const char *path) {
 	config.buckets = buckets;
