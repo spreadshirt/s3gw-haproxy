@@ -34,6 +34,21 @@ static void copy_buckets_config() {
 	}
 }
 
+static void redis_msg_cb(struct redisAsyncContext *ctx, void *replay, void *privdata) {
+	/* debug output
+	 * how can a header be used, as marker for debug output?
+	 */
+	/* debug it when it fails */
+}
+
+static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
+	/* log output */
+}
+
+static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
+	/* log output */
+}
+
 void s3gw_connect() {
 	copy_buckets_config();
 
@@ -48,8 +63,9 @@ void s3gw_connect() {
 	if (!ctx) {
 		// TODO: write a log message
 	}
-
 	redisHaAttach(ctx);
+	redisAsyncSetConnectCallback(ctx, redis_connect_cb);
+	redisAsyncSetDisconnectCallback(ctx, redis_disconnect_cb);
 }
 
 void s3gw_deinit() {
@@ -57,21 +73,6 @@ void s3gw_deinit() {
 		redisAsyncFree(ctx);
 		ctx = NULL;
 	}
-}
-
-static void redis_msg_cb(struct redisAsyncContext *ctx, void *replay, void *privdata) {
-	/* debug output
-	 * how can a header be used, as marker for debug output?
-	 */
-	/* debug it when it fails */
-}
-
-static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
-	/* log output */
-}
-
-static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
-	/* log output */
 }
 
 enum s3_event_t {
