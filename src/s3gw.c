@@ -59,18 +59,18 @@ void s3gw_deinit() {
 	}
 }
 
-void redis_msg_cb(struct redisAsyncContext *ctx, void *replay, void *privdata) {
+static void redis_msg_cb(struct redisAsyncContext *ctx, void *replay, void *privdata) {
 	/* debug output
 	 * how can a header be used, as marker for debug output?
 	 */
 	/* debug it when it fails */
 }
 
-void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
+static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
 	/* log output */
 }
 
-void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
+static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 	/* log output */
 }
 
