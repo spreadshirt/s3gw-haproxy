@@ -73,6 +73,7 @@ int redisHaAttach(redisAsyncContext *async) {
 	privdata->fd = async->c.fd;
 	privdata->async = async;
 
+	/* already attached */
 	if (async->ev.data != NULL)
 	    return REDIS_ERR;
 
