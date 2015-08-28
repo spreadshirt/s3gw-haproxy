@@ -156,6 +156,16 @@ struct global {
 			mode_t mode;    /* 0 to leave unchanged */
 		} ux;
 	} unix_bind;
+#ifdef USE_S3GW
+	struct {
+		struct list buckets;
+		char *bucket_prefix;
+		char *redis_ip;
+		int redis_port;
+		char *bind_ip;
+		char *unix_path;
+	} s3;
+#endif
 #ifdef USE_CPU_AFFINITY
 	unsigned long cpu_map[LONGBITS];  /* list of CPU masks for the 32/64 first processes */
 #endif

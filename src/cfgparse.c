@@ -76,6 +76,7 @@
 #include <proto/raw_sock.h>
 #include <proto/task.h>
 #include <proto/stick_table.h>
+#include "s3gw.h"
 
 #ifdef USE_OPENSSL
 #include <types/ssl_sock.h>
@@ -1299,6 +1300,42 @@ int cfg_parse_global(const char *file, int linenum, char **args, int kwm)
 			free(tmp);
 		}
 	}
+#ifdef USE_S3GW
+	else if (!strcmp(args[0], "s3.bind_ip")) {
+		global.s3.bind_ip = strdup(args[1]);
+	}
+	else if (!strcmp(args[0], "s3.bucket_prefix")) {
+		global.s3.bucket_prefix = strdup(args[1]);
+	}
+	else if (!strcmp(args[0], "s3.redis_ip")) {
+		global.s3.redis_ip = strdup(args[1]);
+	}
+	else if (!strcmp(args[0], "s3.redis_port")) {
+		if (*(args[1]) == 0) {
+			Alert("parsing [%s:%d] : '%s' expects an integer argument (dispatch counts for one).\n",
+			      file, linenum, args[0]);
+			err_code |= ERR_ALERT | ERR_FATAL;
+			goto out;
+		}
+		global.s3.redis_port = atol(args[1]);
+	}
+	else if (!strcmp(args[0], "s3.unix_path")) {
+		global.s3.unix_path = strdup(args[1]);
+	}
+	else if (!strcmp(args[0], "s3.buckets")) {
+		struct s3gw_buckets *bucket;
+		if (*(args[1]) == 1) {
+			Alert("parsing [%s:%d] : '%s' expects <bucketname> as argument.\n", file, linenum, args[0]);
+			err_code |= ERR_ALERT | ERR_FATAL;
+			goto out;
+		}
+
+		bucket = calloc(1, sizeof(struct s3gw_buckets));
+		bucket->bucket = strdup(args[1]);
+
+		LIST_ADDQ(&global.s3.buckets, &bucket->list);
+	}
+#endif /* USE_S3GW */
 	else if (!strcmp(args[0], "log")) {  /* syslog server address */
 		struct sockaddr_storage *sk;
 		int port1, port2;

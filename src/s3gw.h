@@ -3,6 +3,11 @@
 
 struct http_txn;
 
+struct s3gw_buckets {
+    struct list list;
+    char *bucket;
+};
+
 void s3gw_configure(const char **buckets, int buckets_len, const char *bucket_prefix,
 	      const char *ip, int port, const char *path);
 void s3gw_connect();

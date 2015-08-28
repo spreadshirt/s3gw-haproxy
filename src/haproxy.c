@@ -351,6 +351,9 @@ void display_build_opts()
 #if defined(SO_BINDANY)
 	       " SO_BINDANY"
 #endif
+#ifdef USE_S3GW
+	       " USE_S3GW"
+#endif
 	       "\n");
 #endif
 	putchar('\n');
@@ -986,6 +989,9 @@ void deinit(void)
 	struct logsrv *log, *logb;
 	struct logformat_node *lf, *lfb;
 	struct bind_conf *bind_conf, *bind_back;
+#ifdef USE_S3GW
+	struct s3gw_buckets *buckets, *bucketsb;
+#endif
 	int i;
 
 	deinit_signals();
@@ -1251,6 +1257,17 @@ void deinit(void)
 		LIST_DEL(&wl->list);
 		free(wl);
 	}
+#ifdef USE_S3GW
+	list_for_each_entry_safe(buckets, bucketsb, &global.s3.buckets, list) {
+		free(buckets->bucket);
+		LIST_DEL(&buckets->list);
+		free(buckets);
+	}
+	free(global.s3.bind_ip); global.s3.bind_ip = NULL;
+	free(global.s3.bucket_prefix); global.s3.bucket_prefix = NULL;
+	free(global.s3.redis_ip); global.s3.redis_ip = NULL;
+	free(global.s3.unix_path); global.s3.unix_path = NULL;
+#endif /* USE_S3GW */
 
 	pool_destroy2(pool2_session);
 	pool_destroy2(pool2_connection);
