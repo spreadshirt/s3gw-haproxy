@@ -112,6 +112,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_DELETE], bucket, objectkey);
 			break;
 		case HTTP_METH_POST:
+			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_POST], bucket, objectkey);
 			break;
 		case HTTP_METH_PUT:
 			if (txn->s3gw.copy_source && txn->s3gw.copy_source_len > 0) {
