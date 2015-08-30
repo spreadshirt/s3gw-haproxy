@@ -164,6 +164,10 @@ void s3gw_enqueue(struct http_txn *txn) {
 		return;
 	}
 
+	if (txn->status < 200 || txn->status > 300) {
+		return;
+	}
+
 	switch (txn->meth) {
 		case HTTP_METH_DELETE:
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
