@@ -45,7 +45,12 @@ void s3gw_connect() {
 	} else if (global.s3.unix_path) {
 		ctx = redisAsyncConnectUnix(global.s3.unix_path);
 	} else {
-		// TODO: err message
+		send_log(NULL, LOG_ERR,
+			 "s3 notification enabled but no redis server is configured.\n"
+			 "configure a redis server or a unix path\n"
+			 "Disabling s3 notifications.");
+		global.s3.enabled = 0;
+		return;
 	}
 
 	if (!ctx) {
