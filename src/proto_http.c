@@ -6021,7 +6021,6 @@ int http_wait_for_response(struct session *s, struct channel *rep, int an_bit)
 		break;
 	}
 
-
 #ifdef USE_S3GW
 	if (!txn->s3gw.ignore)
 		s3gw_enqueue(txn);

@@ -40,13 +40,19 @@ static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 }
 
 void s3gw_connect() {
+	if (LIST_ISEMPTY(&global.s3.buckets)) {
+		send_log(NULL, LOG_ERR, "s3 notifications enabled but no buckets are defined. Disabling s3 notifications.");
+		global.s3.enabled = 0;
+		return;
+	}
+
 	if (global.s3.redis_ip && global.s3.redis_port) {
 		ctx = redisAsyncConnect(global.s3.redis_ip, global.s3.redis_port);
 	} else if (global.s3.redis_unix_path) {
 		ctx = redisAsyncConnectUnix(global.s3.redis_unix_path);
 	} else {
 		send_log(NULL, LOG_ERR,
-			 "s3 notification enabled but no redis server is configured.\n"
+			 "s3 notifications enabled but no redis server is configured.\n"
 			 "configure a redis server or a unix path\n"
 			 "Disabling s3 notifications.");
 		global.s3.enabled = 0;
