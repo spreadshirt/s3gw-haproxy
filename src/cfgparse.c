@@ -1322,8 +1322,8 @@ int cfg_parse_global(const char *file, int linenum, char **args, int kwm)
 		}
 		global.s3.redis_port = atol(args[1]);
 	}
-	else if (!strcmp(args[0], "s3.unix_path")) {
-		global.s3.unix_path = strdup(args[1]);
+	else if (!strcmp(args[0], "s3.redis_unix_path")) {
+		global.s3.redis_unix_path = strdup(args[1]);
 	}
 	else if (!strcmp(args[0], "s3.buckets")) {
 		struct s3gw_buckets *bucket;

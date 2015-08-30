@@ -1273,7 +1273,7 @@ void deinit(void)
 	free(global.s3.bind_ip); global.s3.bind_ip = NULL;
 	free(global.s3.bucket_prefix); global.s3.bucket_prefix = NULL;
 	free(global.s3.redis_ip); global.s3.redis_ip = NULL;
-	free(global.s3.unix_path); global.s3.unix_path = NULL;
+	free(global.s3.redis_unix_path); global.s3.redis_unix_path = NULL;
 #endif /* USE_S3GW */
 
 	pool_destroy2(pool2_session);

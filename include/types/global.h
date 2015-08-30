@@ -164,7 +164,7 @@ struct global {
 		char *redis_ip;
 		int redis_port;
 		char *bind_ip;
-		char *unix_path;
+		char *redis_unix_path;
 	} s3;
 #endif
 #ifdef USE_CPU_AFFINITY

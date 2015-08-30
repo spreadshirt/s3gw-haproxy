@@ -42,8 +42,8 @@ static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 void s3gw_connect() {
 	if (global.s3.redis_ip && global.s3.redis_port) {
 		ctx = redisAsyncConnect(global.s3.redis_ip, global.s3.redis_port);
-	} else if (global.s3.unix_path) {
-		ctx = redisAsyncConnectUnix(global.s3.unix_path);
+	} else if (global.s3.redis_unix_path) {
+		ctx = redisAsyncConnectUnix(global.s3.redis_unix_path);
 	} else {
 		send_log(NULL, LOG_ERR,
 			 "s3 notification enabled but no redis server is configured.\n"
