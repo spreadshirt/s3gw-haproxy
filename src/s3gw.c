@@ -76,21 +76,20 @@ void s3gw_deinit() {
 	}
 }
 
-enum s3_event_t {
-	S3_PUT = 0,
-	S3_POST,
-	S3_COPY,
-	S3_DELETE,
-};
-
 /* TODO: add bucket prefix once started not for every message could safe a lot */
 /* using %b makes it possible to use pointer + len like copy_source is */
-const char *redisevent[] = {
-	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Put\",\"objectKey\":\"%b\"}",
-	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Post\",\"objectKey\":\"%b\"}",
-	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"src\":\"%b\"}",
-	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Delete\",\"objectKey\":\"%b\"}",
+/* WARNING: this must match the HTTP_METH */
+const char *redisevent[HTTP_METH_OTHER] = {
+	NULL, /* NONE */
+	NULL, /* OPTIONS */
+	NULL, /* GET */
+	NULL, /* HEAD */
+	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Post\",\"objectKey\":\"%b\"}", /* POST */
+	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Put\",\"objectKey\":\"%b\"}", /* PUT */
+	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Delete\",\"objectKey\":\"%b\"}", /* DELETE */
 };
+
+const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"src\":\"%b\"}";
 
 /* split up the bucket and objectkey out of the uri */
 int get_bucket_objectkey(
@@ -170,21 +169,12 @@ void s3gw_enqueue(struct http_txn *txn) {
 
 	switch (txn->meth) {
 		case HTTP_METH_DELETE:
-			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
-				/* log: can not get bucket on uri */
-				return;
-			}
-			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_DELETE],
-						global.s3.bucket_prefix,
-						bucket, bucket_len,
-						objectkey, objectkey_len);
-			break;
 		case HTTP_METH_POST:
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				/* log: can not get bucket on uri */
 				return;
 			}
-			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_POST],
+			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[txn->meth],
 						global.s3.bucket_prefix,
 						bucket, bucket_len,
 						objectkey, objectkey_len);
@@ -195,13 +185,13 @@ void s3gw_enqueue(struct http_txn *txn) {
 				return;
 			}
 			if (txn->s3gw.copy_source && txn->s3gw.copy_source_len > 0) {
-				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_COPY],
+				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redis_copy_command,
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
 							objectkey, objectkey_len,
 							txn->s3gw.copy_source, txn->s3gw.copy_source_len);
 			} else {
-				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_PUT],
+				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[txn->meth],
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
 							objectkey, objectkey_len);
