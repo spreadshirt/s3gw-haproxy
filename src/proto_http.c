@@ -5981,11 +5981,6 @@ int http_wait_for_response(struct session *s, struct channel *rep, int an_bit)
 	 * 2: check for cacheability.
 	 */
 
-#ifdef USE_S3GW
-	if (!txn->s3gw.ignore)
-		s3gw_enqueue(txn);
-#endif /* S3GW */
-
 	switch (txn->status) {
 	case 100:
 		/*
@@ -6025,6 +6020,12 @@ int http_wait_for_response(struct session *s, struct channel *rep, int an_bit)
 	default:
 		break;
 	}
+
+
+#ifdef USE_S3GW
+	if (!txn->s3gw.ignore)
+		s3gw_enqueue(txn);
+#endif /* S3GW */
 
 	/*
 	 * 3: we may need to capture headers
