@@ -109,18 +109,18 @@ void s3gw_enqueue(struct http_txn *txn) {
 
 	switch (txn->meth) {
 		case HTTP_METH_DELETE:
-			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_DELETE], bucket, objectkey);
+			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_DELETE], global.s3.bucket_prefix, bucket, objectkey);
 			break;
 		case HTTP_METH_POST:
-			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_POST], bucket, objectkey);
+			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_POST], global.s3.bucket_prefix, bucket, objectkey);
 			break;
 		case HTTP_METH_PUT:
 			if (txn->s3gw.copy_source && txn->s3gw.copy_source_len > 0) {
 				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_COPY],
-							bucket, objectkey,
+							global.s3.bucket_prefix, bucket, objectkey,
 							txn->s3gw.copy_source, txn->s3gw.copy_source_len);
 			} else {
-				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_PUT], bucket, objectkey);
+				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[S3_PUT], global.s3.bucket_prefix, bucket, objectkey);
 			}
 			break;
 		default:
