@@ -89,7 +89,7 @@ const char *redisevent[HTTP_METH_OTHER] = {
 	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Delete\",\"objectKey\":\"%b\"}", /* DELETE */
 };
 
-const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"src\":\"%b\"}";
+const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"source\":\"%b\"}";
 
 /* split up the bucket and objectkey out of the uri */
 int get_bucket_objectkey(
