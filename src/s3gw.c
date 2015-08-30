@@ -11,28 +11,6 @@
 #include "haproxy_redis.h"
 
 static struct redisAsyncContext *ctx = NULL;
-static struct s3gw_config {
-	const char **buckets;
-	int buckets_len;
-} config;
-
-/* does this really safes some runtime? */
-static void copy_buckets_config() {
-	if (config.buckets == NULL) {
-		struct s3gw_buckets *buckets;
-		int i = 0;
-
-		list_for_each_entry(buckets, &global.s3.buckets, list)
-				i++;
-
-		config.buckets = calloc(i, sizeof(char));
-		config.buckets_len = i;
-		i = 0;
-		list_for_each_entry(buckets, &global.s3.buckets, list) {
-			config.buckets[i++] = buckets->bucket;
-		}
-	}
-}
 
 static void redis_msg_cb(struct redisAsyncContext *ctx, void *replay, void *privdata) {
 	/* debug output
@@ -50,7 +28,6 @@ static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 }
 
 void s3gw_connect() {
-	copy_buckets_config();
 
 	if (global.s3.redis_ip && global.s3.redis_port) {
 		ctx = redisAsyncConnect(global.s3.redis_ip, global.s3.redis_port);
