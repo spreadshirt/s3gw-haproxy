@@ -62,6 +62,7 @@ void s3gw_connect() {
 
 	if (!ctx) {
 		// TODO: write a log message
+		return;
 	}
 	redisHaAttach(ctx);
 	redisAsyncSetConnectCallback(ctx, redis_connect_cb);
