@@ -5,30 +5,41 @@
 #include <hiredis/async.h>
 #include <types/proto_http.h>
 #include <proto/proto_http.h>
+#include <proto/log.h>
 
 #include <types/global.h>
 
 #include "haproxy_redis.h"
 
+#define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "S3: " format "\n", ## __VA_ARGS__)
+
 static struct redisAsyncContext *ctx = NULL;
 
-static void redis_msg_cb(struct redisAsyncContext *ctx, void *replay, void *privdata) {
-	/* debug output
-	 * how can a header be used, as marker for debug output?
-	 */
-	/* debug it when it fails */
+static void redis_msg_cb(struct redisAsyncContext *ctx, void *anon_reply, void *privdata) {
+	redisReply *reply = anon_reply;
+	if (reply->type == REDIS_REPLY_ERROR) {
+		S3_LOG(NULL, LOG_ERR, "redis message failed: %s", reply->str);
+	}
 }
 
 static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
-	/* log output */
+	if (status == REDIS_OK)
+		S3_LOG(NULL, LOG_INFO, "disconnect from redis.");
+	else
+		S3_LOG(NULL, LOG_INFO, "disconnect from redis. becuase of an error.");
 }
 
 static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
-	/* log output */
+	if (status == REDIS_OK) {
+		S3_LOG(NULL, LOG_INFO, "connected to redis.");
+	} else {
+		S3_LOG(NULL, LOG_ERR, "could not connect to redis!\n"
+				      "redis errno %d"
+				      "redis errstr: %s", ctx->err, ctx->errstr);
+	}
 }
 
 void s3gw_connect() {
-
 	if (global.s3.redis_ip && global.s3.redis_port) {
 		ctx = redisAsyncConnect(global.s3.redis_ip, global.s3.redis_port);
 	} else if (global.s3.unix_path) {
@@ -198,6 +209,6 @@ void s3gw_enqueue(struct http_txn *txn) {
 	}
 
 	if (ret != REDIS_OK) {
-		/* log output */
+		S3_LOG(NULL, LOG_ERR, "could not enque redis");
 	}
 }
