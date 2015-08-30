@@ -76,6 +76,7 @@ int http_wait_for_response(struct session *s, struct channel *rep, int an_bit);
 int http_process_res_common(struct session *s, struct channel *rep, int an_bit, struct proxy *px);
 int http_request_forward_body(struct session *s, struct channel *req, int an_bit);
 int http_response_forward_body(struct session *s, struct channel *res, int an_bit);
+char *http_get_path(struct http_txn *txn);
 
 void debug_hdr(const char *dir, struct session *s, const char *start, const char *end);
 void get_srv_from_appsession(struct session *s, const char *begin, int len);
