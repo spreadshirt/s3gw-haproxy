@@ -76,6 +76,7 @@ void s3gw_deinit() {
 	}
 }
 
+
 /* TODO: add bucket prefix once started not for every message could safe a lot */
 /* using %b makes it possible to use pointer + len like copy_source is */
 /* WARNING: this must match the HTTP_METH */
@@ -145,6 +146,17 @@ int get_bucket_objectkey(
 	return 0;
 }
 
+int check_bucket_valid_for_notification(const char *bucket, int bucket_len) {
+	struct s3gw_buckets *buckets;
+
+	list_for_each_entry(buckets, &global.s3.buckets, list) {
+		if (!strncmp(buckets->bucket, bucket, bucket_len))
+			return 1;
+	}
+
+	return 0;
+}
+
 /* enqueue the message */
 void s3gw_enqueue(struct http_txn *txn) {
 	int ret = 0;
@@ -171,7 +183,9 @@ void s3gw_enqueue(struct http_txn *txn) {
 		case HTTP_METH_DELETE:
 		case HTTP_METH_POST:
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
-				/* log: can not get bucket on uri */
+				return;
+			}
+			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
 				return;
 			}
 			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[txn->meth],
@@ -181,9 +195,13 @@ void s3gw_enqueue(struct http_txn *txn) {
 			break;
 		case HTTP_METH_PUT:
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
-				/* log: can not get bucket on uri */
 				return;
 			}
+
+			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
+				return;
+			}
+
 			if (txn->s3gw.copy_source && txn->s3gw.copy_source_len > 0) {
 				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redis_copy_command,
 							global.s3.bucket_prefix,
