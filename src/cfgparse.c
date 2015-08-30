@@ -1311,6 +1311,12 @@ int cfg_parse_global(const char *file, int linenum, char **args, int kwm)
 		global.s3.bucket_prefix = strdup(args[1]);
 	}
 	else if (!strcmp(args[0], "s3.redis_ip")) {
+		if (global.s3.redis_unix_path) {
+			err_code |= ERR_ALERT | ERR_FATAL;
+			Alert("parsing [%s:%d] : '%s' can not set a redis_ip while a redis_unix_path is set.\n",
+			      file, linenum, args[0]);
+			goto out;
+		}
 		global.s3.redis_ip = strdup(args[1]);
 	}
 	else if (!strcmp(args[0], "s3.redis_port")) {
@@ -1323,6 +1329,12 @@ int cfg_parse_global(const char *file, int linenum, char **args, int kwm)
 		global.s3.redis_port = atol(args[1]);
 	}
 	else if (!strcmp(args[0], "s3.redis_unix_path")) {
+		if (global.s3.redis_unix_path) {
+			err_code |= ERR_ALERT | ERR_FATAL;
+			Alert("parsing [%s:%d] : '%s' can not set a redis_unix_path while a redis_ip is set.\n",
+			      file, linenum, args[0]);
+			goto out;
+		}
 		global.s3.redis_unix_path = strdup(args[1]);
 	}
 	else if (!strcmp(args[0], "s3.buckets")) {
