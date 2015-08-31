@@ -1,20 +1,20 @@
 #include <assert.h>
-#include <hiredis/hiredis.h>
-#include <hiredis/async.h>
-#include <types/proto_http.h>
-#include <types/task.h>
-#include <proto/proto_http.h>
-#include <proto/log.h>
-#include <proto/task.h>
-#include <types/s3gw.h>
-
-#include <proto/s3gw.h>
-
-#include <types/global.h>
 
 #include <common/time.h>
 
 #include <proto/haproxy_redis.h>
+#include <proto/log.h>
+#include <proto/proto_http.h>
+#include <proto/s3gw.h>
+#include <proto/task.h>
+
+#include <types/global.h>
+#include <types/proto_http.h>
+#include <types/s3gw.h>
+#include <types/task.h>
+
+#include <hiredis/async.h>
+#include <hiredis/hiredis.h>
 
 #define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "S3: " format "\n", ## __VA_ARGS__)
 
