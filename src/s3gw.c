@@ -39,11 +39,13 @@ static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 	}
 }
 
-void s3gw_connect() {
+/* return 0 if everything ok or wrong configured.
+ * retcode is used to define if a reconnect is required. */
+int s3gw_connect() {
 	if (LIST_ISEMPTY(&global.s3.buckets)) {
 		send_log(NULL, LOG_ERR, "s3 notifications enabled but no buckets are defined. Disabling s3 notifications.");
 		global.s3.enabled = 0;
-		return;
+		return 0;
 	}
 
 	if (global.s3.redis_ip && global.s3.redis_port) {
@@ -56,15 +58,17 @@ void s3gw_connect() {
 			 "configure a redis server or a unix path\n"
 			 "Disabling s3 notifications.");
 		global.s3.enabled = 0;
-		return;
+		return 0;
 	}
 
-	if (!ctx) {
-		return;
+		return 1;
 	}
+
 	redisHaAttach(ctx);
 	redisAsyncSetConnectCallback(ctx, redis_connect_cb);
 	redisAsyncSetDisconnectCallback(ctx, redis_disconnect_cb);
+
+	return 0;
 }
 
 void s3gw_deinit() {

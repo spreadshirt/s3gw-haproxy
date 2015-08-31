@@ -10,7 +10,7 @@ struct s3gw_buckets {
     char *bucket;
 };
 
-void s3gw_connect();
+int s3gw_connect();
 void s3gw_deinit();
 void s3gw_enqueue(struct http_txn *txn);
 
