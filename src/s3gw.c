@@ -4,16 +4,21 @@
 #include <hiredis/hiredis.h>
 #include <hiredis/async.h>
 #include <types/proto_http.h>
+#include <types/task.h>
 #include <proto/proto_http.h>
 #include <proto/log.h>
+#include <proto/task.h>
 
 #include <types/global.h>
+
+#include <common/time.h>
 
 #include "haproxy_redis.h"
 
 #define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "S3: " format "\n", ## __VA_ARGS__)
 
 static struct redisAsyncContext *ctx = NULL;
+static struct task *reconnect_task = NULL;
 
 static void redis_msg_cb(struct redisAsyncContext *ctx, void *anon_reply, void *privdata) {
 	redisReply *reply = anon_reply;
@@ -37,6 +42,37 @@ static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 				      "redis errno %d"
 				      "redis errstr: %s", ctx->err, ctx->errstr);
 	}
+}
+
+/* called by redis_reconnect task */
+static struct task *redis_reconnect(struct task *t) {
+	if (ctx) {
+		redisAsyncDisconnect(ctx);
+		redisAsyncFree(ctx);
+		ctx = NULL;
+	}
+
+	if (s3gw_connect()) {
+		S3_LOG(NULL, LOG_ERR, "reconnect to redis failed. Retry in 1 second.");
+		t->expire = tick_add(now_ms, 1000);
+		return t;
+	}
+
+	return t;
+}
+
+static void schedule_redis_reconnect() {
+	if (reconnect_task == NULL) {
+		reconnect_task = task_new();
+		if (!reconnect_task) {
+			/* no memory */
+			return;
+		}
+
+		reconnect_task->process = redis_reconnect;
+	}
+
+	task_schedule(reconnect_task, tick_add(now_ms, 1000)); /* try again in 1 second */
 }
 
 /* return 0 if everything ok or wrong configured.
@@ -78,6 +114,11 @@ void s3gw_deinit() {
 	if (ctx) {
 		redisAsyncFree(ctx);
 		ctx = NULL;
+	}
+
+	if (reconnect_task) {
+		task_free(reconnect_task);
+		reconnect_task = NULL;
 	}
 }
 
