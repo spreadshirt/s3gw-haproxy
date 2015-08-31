@@ -69,7 +69,7 @@ static int fd_handler(int fd) {
 }
 
 int redisHaAttach(redisAsyncContext *async) {
-	struct redisHaproxyAsync *privdata;
+	struct redisHaproxyAsync *hap;
 
 	if (async->c.fd > global.maxsock)
 		return REDIS_ERR_OTHER;
@@ -78,21 +78,21 @@ int redisHaAttach(redisAsyncContext *async) {
 	if (async->ev.data != NULL)
 	    return REDIS_ERR;
 
-	privdata = (struct redisHaproxyAsync *) malloc(sizeof(*privdata));
-	privdata->fd = async->c.fd;
-	privdata->async = async;
+	hap = (struct redisHaproxyAsync *) malloc(sizeof(*hap));
+	hap->fd = async->c.fd;
+	hap->async = async;
 
 	async->ev.addRead = ha_addRead;
 	async->ev.addWrite = ha_addWrite;
 	async->ev.delRead = ha_delRead;
 	async->ev.delWrite = ha_delWrite;
 	async->ev.cleanup = ha_cleanup;
-	async->ev.data = privdata;
+	async->ev.data = hap;
 
-	fdtab[privdata->fd].owner = privdata;
-	fdtab[privdata->fd].iocb = fd_handler;
+	fdtab[hap->fd].owner = hap;
+	fdtab[hap->fd].iocb = fd_handler;
 
-	fd_insert(privdata->fd);
+	fd_insert(hap->fd);
 
 	return REDIS_OK;
 }
