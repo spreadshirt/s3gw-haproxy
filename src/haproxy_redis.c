@@ -15,21 +15,29 @@ struct redisHaproxyAsync {
 
 static void ha_addRead(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
+	assert(hap);
+
 	fd_want_recv(hap->fd);
 }
 
 static void ha_delRead(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
+	assert(hap);
+
 	fd_cant_recv(hap->fd);
 }
 
 static void ha_addWrite(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
+	assert(hap);
+
 	fd_want_send(hap->fd);
 }
 
 static void ha_delWrite(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
+	assert(hap);
+
 	fd_cant_send(hap->fd);
 }
 
@@ -46,7 +54,6 @@ static void ha_cleanup(void *privdata) {
 
 static int fd_handler(int fd) {
 	struct redisHaproxyAsync *hap = fdtab[fd].owner;
-
 	assert(hap);
 
 	if (fdtab[fd].ev & FD_POLL_IN) {
