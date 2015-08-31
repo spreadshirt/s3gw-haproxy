@@ -73,6 +73,8 @@ int s3gw_connect() {
 }
 
 void s3gw_deinit() {
+	global.s3.enabled = 0;
+
 	if (ctx) {
 		redisAsyncFree(ctx);
 		ctx = NULL;
