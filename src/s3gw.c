@@ -61,6 +61,7 @@ int s3gw_connect() {
 		return 0;
 	}
 
+	if (!ctx || ctx->err) {
 		return 1;
 	}
 
