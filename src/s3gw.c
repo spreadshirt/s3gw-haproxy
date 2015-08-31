@@ -14,7 +14,7 @@
 
 #include <common/time.h>
 
-#include "haproxy_redis.h"
+#include <proto/haproxy_redis.h>
 
 #define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "S3: " format "\n", ## __VA_ARGS__)
 

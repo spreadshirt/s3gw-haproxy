@@ -1,12 +1,10 @@
-
-#include "haproxy_redis.h"
-
 #include <assert.h>
 
 #include <types/global.h>
 
 #include <types/fd.h>
 #include <proto/fd.h>
+#include <proto/haproxy_redis.h>
 
 #include <hiredis/async.h>
 
