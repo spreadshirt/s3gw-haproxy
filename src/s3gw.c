@@ -74,11 +74,10 @@ void s3gw_deinit() {
 	}
 }
 
-
 /* TODO: add bucket prefix once started not for every message could safe a lot */
 /* using %b makes it possible to use pointer + len like copy_source is */
 /* WARNING: this must match the HTTP_METH */
-const char *redisevent[HTTP_METH_OTHER] = {
+static const char *redisevent[HTTP_METH_OTHER] = {
 	NULL, /* NONE */
 	NULL, /* OPTIONS */
 	NULL, /* GET */
@@ -88,10 +87,10 @@ const char *redisevent[HTTP_METH_OTHER] = {
 	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Delete\",\"objectKey\":\"%b\"}", /* DELETE */
 };
 
-const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"source\":\"%b\"}";
+static const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"source\":\"%b\"}";
 
 /* split up the bucket and objectkey out of the uri */
-int get_bucket_objectkey(
+static int get_bucket_objectkey(
 		struct http_txn *txn,
 		const char **bucket,
 		int *bucket_len,
@@ -144,7 +143,7 @@ int get_bucket_objectkey(
 	return 0;
 }
 
-int check_bucket_valid_for_notification(const char *bucket, int bucket_len) {
+static int check_bucket_valid_for_notification(const char *bucket, int bucket_len) {
 	struct s3gw_buckets *buckets;
 
 	list_for_each_entry(buckets, &global.s3.buckets, list) {
