@@ -69,13 +69,13 @@ int redisHaAttach(redisAsyncContext *async) {
 	if (async->c.fd > global.maxsock)
 		return REDIS_ERR_OTHER;
 
-	privdata = (struct redisHaproxyAsync *) malloc(sizeof(*privdata));
-	privdata->fd = async->c.fd;
-	privdata->async = async;
-
 	/* already attached */
 	if (async->ev.data != NULL)
 	    return REDIS_ERR;
+
+	privdata = (struct redisHaproxyAsync *) malloc(sizeof(*privdata));
+	privdata->fd = async->c.fd;
+	privdata->async = async;
 
 	async->ev.addRead = ha_addRead;
 	async->ev.addWrite = ha_addWrite;
