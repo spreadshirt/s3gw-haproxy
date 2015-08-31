@@ -1,5 +1,3 @@
-#include "s3gw.h"
-
 #include <assert.h>
 #include <hiredis/hiredis.h>
 #include <hiredis/async.h>
@@ -8,6 +6,9 @@
 #include <proto/proto_http.h>
 #include <proto/log.h>
 #include <proto/task.h>
+#include <types/s3gw.h>
+
+#include <proto/s3gw.h>
 
 #include <types/global.h>
 

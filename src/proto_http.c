@@ -67,7 +67,7 @@
 #include <proto/pattern.h>
 
 #ifdef USE_S3GW
-#include "s3gw.h"
+#include <proto/s3gw.h>
 #endif /* S3GW */
 
 const char HTTP_100[] =

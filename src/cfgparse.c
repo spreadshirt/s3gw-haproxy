@@ -76,7 +76,11 @@
 #include <proto/raw_sock.h>
 #include <proto/task.h>
 #include <proto/stick_table.h>
-#include "s3gw.h"
+
+#ifdef USE_S3GW
+#include <types/s3gw.h>
+#include <proto/s3gw.h>
+#endif
 
 #ifdef USE_OPENSSL
 #include <types/ssl_sock.h>
