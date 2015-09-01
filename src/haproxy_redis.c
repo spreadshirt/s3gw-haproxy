@@ -24,7 +24,7 @@ static void ha_delRead(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
 	assert(hap);
 
-	fd_cant_recv(hap->fd);
+	fd_stop_send(hap->fd);
 }
 
 static void ha_addWrite(void *privdata) {
@@ -38,17 +38,16 @@ static void ha_delWrite(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
 	assert(hap);
 
-	fd_cant_send(hap->fd);
+	fd_stop_send(hap->fd);
 }
 
 static void ha_cleanup(void *privdata) {
 	struct redisHaproxyAsync *hap = privdata;
 	assert(hap);
 
-	ha_delWrite(privdata);
-	ha_delRead(privdata);
-
+	fd_stop_both(hap->fd);
 	fd_delete(hap->fd);
+
 	free(hap);
 }
 
