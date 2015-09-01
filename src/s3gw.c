@@ -21,42 +21,18 @@
 static struct redisAsyncContext *ctx = NULL;
 static struct task *reconnect_task = NULL;
 
-static void redis_msg_cb(struct redisAsyncContext *ctx, void *anon_reply, void *privdata) {
-	redisReply *reply = anon_reply;
-	if (reply->type == REDIS_REPLY_ERROR) {
-		S3_LOG(NULL, LOG_ERR, "redis message failed: %s", reply->str);
-	}
-}
-
-static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
-	if (status == REDIS_OK)
-		S3_LOG(NULL, LOG_INFO, "disconnect from redis.");
-	else
-		S3_LOG(NULL, LOG_INFO, "disconnect from redis. becuase of an error.");
-}
-
-static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
-	if (status == REDIS_OK) {
-		S3_LOG(NULL, LOG_INFO, "connected to redis.");
-	} else {
-		S3_LOG(NULL, LOG_ERR, "could not connect to redis!\n"
-				      "redis errno %d"
-				      "redis errstr: %s", ctx->err, ctx->errstr);
-	}
-}
-
 /* called by redis_reconnect task */
 static struct task *redis_reconnect(struct task *t) {
 	if (ctx) {
-		redisAsyncDisconnect(ctx);
-		redisAsyncFree(ctx);
 		ctx = NULL;
 	}
 
 	if (s3gw_connect()) {
 		S3_LOG(NULL, LOG_ERR, "reconnect to redis failed. Retry in 1 second.");
-		t->expire = tick_add(now_ms, 1000);
+		t->expire = tick_add(now_ms, 10000);
 		return t;
+	} else {
+		t->expire = 0;
 	}
 
 	return t;
@@ -71,10 +47,42 @@ static void schedule_redis_reconnect() {
 		}
 
 		reconnect_task->process = redis_reconnect;
+	} else if (tick_isset(reconnect_task->expire)) { /* check if alrady enqueued */
+			return;
 	}
 
 	task_schedule(reconnect_task, tick_add(now_ms, 1000)); /* try again in 1 second */
 }
+
+static void redis_msg_cb(struct redisAsyncContext *ctx, void *anon_reply, void *privdata) {
+	redisReply *reply = anon_reply;
+	if (reply->type == REDIS_REPLY_ERROR) {
+		S3_LOG(NULL, LOG_ERR, "redis message failed: %s", reply->str);
+	}
+}
+
+static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
+	if (status == REDIS_OK) {
+		S3_LOG(NULL, LOG_INFO, "disconnect from redis.");
+	} else {
+		S3_LOG(NULL, LOG_INFO, "disconnect from redis. becuase of an error.");
+		ctx = NULL;
+		schedule_redis_reconnect();
+	}
+}
+
+static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
+	if (status == REDIS_OK) {
+		S3_LOG(NULL, LOG_INFO, "connected to redis.");
+	} else {
+		S3_LOG(NULL, LOG_ERR, "could not connect to redis!\n"
+				      "redis errno %d"
+				      "redis errstr: %s", ctx->err, ctx->errstr);
+		ctx = NULL;
+		schedule_redis_reconnect();
+	}
+}
+
 
 /* return 0 if everything ok or wrong configured.
  * retcode is used to define if a reconnect is required. */
@@ -219,7 +227,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 	/* check if properly connected */
 	if (!ctx || ctx->err) {
 		/* only log at the moment */
-		/* do reconnect and lock out the ctx to prevent other callbacks from doing the same */
+		schedule_redis_reconnect();
 		return;
 	}
 
