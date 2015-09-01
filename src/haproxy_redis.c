@@ -55,12 +55,13 @@ static int fd_handler(int fd) {
 	struct redisHaproxyAsync *hap = fdtab[fd].owner;
 	assert(hap);
 
-	if (fdtab[fd].ev & FD_POLL_IN) {
+	if (fdtab[fd].state & FD_EV_ACTIVE_R &&
+			fdtab[fd].ev & FD_POLL_IN) {
 		redisAsyncHandleRead(hap->async);
-		fd_done_recv(fd);
 	}
 
-	if (fdtab[fd].ev & FD_POLL_OUT) {
+	if (fdtab[fd].state & FD_EV_ACTIVE_W &&
+			fdtab[fd].ev & FD_POLL_OUT) {
 		redisAsyncHandleWrite(hap->async);
 	}
 
