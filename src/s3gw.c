@@ -159,6 +159,8 @@ static int get_bucket_objectkey(
 
 	int count_slashs = 0;
 
+	S3_LOG(NULL, LOG_INFO, "1");
+
 	end = txn->req.chn->buf->p + txn->req.sl.rq.u + txn->req.sl.rq.u_l;
 	start = ptr = http_get_path(txn);
 	if (!ptr)
@@ -176,8 +178,12 @@ static int get_bucket_objectkey(
 		ptr++;
 	}
 
+	S3_LOG(NULL, LOG_INFO, "2");
+
 	if (count_slashs < 2 || *objectkey == NULL || *bucket == NULL)
 		return 1;
+
+	S3_LOG(NULL, LOG_INFO, "3");
 
 	if(*ptr == '?')
 		*object_len = ptr - *objectkey - 1;
