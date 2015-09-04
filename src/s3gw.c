@@ -240,15 +240,21 @@ void s3gw_enqueue(struct http_txn *txn) {
 						objectkey, objectkey_len);
 			break;
 		case HTTP_METH_PUT:
+			S3_LOG(NULL, LOG_INFO, "enqueue on PUT");
+
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
+			S3_LOG(NULL, LOG_INFO, "object key: %s", objectkey);
 
 			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
+				S3_LOG(NULL, LOG_INFO, "bucket '%s' not enabled for notifications", bucket);
 				return;
 			}
 
 			if (txn->s3gw.copy_source && txn->s3gw.copy_source_len > 0) {
+				S3_LOG(NULL, LOG_INFO, "publish notification");
+
 				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redis_copy_command,
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
@@ -262,6 +268,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 			}
 			break;
 		default:
+			S3_LOG(NULL, LOG_INFO, "ignore HTTP method %d", txn->meth);
 			return;
 			break;
 	}
