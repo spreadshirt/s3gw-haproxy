@@ -2994,19 +2994,17 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 		if (http_find_header2("X-Notifications", 14, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {
 			if (ctx.vlen == 5 && strncasecmp(ctx.line + ctx.val, "False", 5)) {
 				txn->s3gw.ignore = 1;
-				/* goto no_notification; should make it faster */
+				goto no_notification;
 			}
 		}
 
-		if (!txn->s3gw.ignore) {
-			ctx.idx = 0;
-			if (http_find_header2("x-amz-copy-source", 17, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {
-				txn->s3gw.copy_source = ctx.line + ctx.val;
-				txn->s3gw.copy_source_len = ctx.vlen;
-			}
+		ctx.idx = 0;
+		if (unlikely(http_find_header2("x-amz-copy-source", 17, txn->req.chn->buf->p, &txn->hdr_idx, &ctx))) {
+			txn->s3gw.copy_source = ctx.line + ctx.val;
+			txn->s3gw.copy_source_len = ctx.vlen;
 		}
 	}
-//no_notification:
+no_notification:
 #endif /* S3GW */
 
 	ctx.idx = 0;
