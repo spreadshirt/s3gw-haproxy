@@ -467,9 +467,8 @@ struct http_res_rule {
 };
 
 struct s3gateway {
-	const char *copy_source;
+	char *copy_source;
 	char *path;
-	int copy_source_len;
 	int ignore:1;
 };
 

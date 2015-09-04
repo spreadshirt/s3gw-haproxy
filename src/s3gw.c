@@ -144,7 +144,7 @@ static const char *redisevent[HTTP_METH_OTHER] = {
 	"LPUSH %s:%b {\"event\":\"s3:ObjectRemoved:Delete\",\"objectKey\":\"%b\"}", /* DELETE */
 };
 
-static const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"source\":\"%b\"}";
+static const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"source\":\"%s\"}";
 
 /* split up the bucket and objectkey out of the uri */
 static int get_bucket_objectkey(
@@ -263,14 +263,14 @@ void s3gw_enqueue(struct http_txn *txn) {
 				return;
 			}
 
-			if (txn->s3gw.copy_source && txn->s3gw.copy_source_len > 0) {
+			if (txn->s3gw.copy_source) {
 				S3_LOG(NULL, LOG_INFO, "publish notification");
 
 				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redis_copy_command,
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
 							objectkey, objectkey_len,
-							txn->s3gw.copy_source, txn->s3gw.copy_source_len);
+							txn->s3gw.copy_source);
 			} else {
 				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[txn->meth],
 							global.s3.bucket_prefix,

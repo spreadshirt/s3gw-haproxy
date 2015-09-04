@@ -237,6 +237,7 @@ struct http_res_action_kw_list http_res_keywords = {
 struct chunk http_err_chunks[HTTP_ERR_SIZE];
 
 struct pool_head *pool2_s3path;
+struct pool_head *pool2_s3copy_source;
 
 /* this struct is used between calls to smp_fetch_hdr() or smp_fetch_cookie() */
 static struct hdr_ctx static_hdr_ctx;
@@ -334,6 +335,7 @@ void init_proto_http()
 	/* memory allocations */
 	pool2_requri = create_pool("requri", REQURI_LEN, MEM_F_SHARED);
 	pool2_s3path = create_pool("s3path", REQURI_LEN, MEM_F_SHARED);
+	pool2_s3copy_source = create_pool("s3copy_source", REQURI_LEN, MEM_F_SHARED);
 	pool2_uniqueid = create_pool("uniqueid", UNIQUEID_LEN, MEM_F_SHARED);
 }
 
@@ -3012,8 +3014,17 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 
 		ctx.idx = 0;
 		if (unlikely(http_find_header2("x-amz-copy-source", 17, txn->req.chn->buf->p, &txn->hdr_idx, &ctx))) {
-			txn->s3gw.copy_source = ctx.line + ctx.val;
-			txn->s3gw.copy_source_len = ctx.vlen;
+			if (unlikely(ctx.vlen >= REQURI_LEN)) {
+				char *long_url = calloc(1, ctx.vlen);
+				memcpy(long_url, ctx.line + ctx.val, ctx.vlen);
+				send_log(NULL, LOG_ERR, "S3: x-amz-copy-source is too long. Url: %s\n", long_url);
+				free(long_url);
+				txn->s3gw.ignore = 1;
+				goto no_notification;
+			}
+			txn->s3gw.copy_source = pool_alloc2(pool2_s3copy_source);
+			memcpy(txn->s3gw.copy_source, ctx.line + ctx.val, ctx.vlen);
+			txn->s3gw.copy_source[ctx.vlen] = 0;
 		}
 
 		if (unlikely(!txn->req.sl.rq.u_l)) {
@@ -8838,6 +8849,8 @@ void http_end_txn(struct session *s)
 #ifdef USE_S3GW
 	pool_free2(pool2_s3path, txn->s3gw.path);
 	txn->s3gw.path = NULL;
+	pool_free2(pool2_s3copy_source, txn->s3gw.copy_source);
+	txn->s3gw.copy_source = NULL;
 #endif /* USE_S3GW */
 
 	s->unique_id = NULL;
