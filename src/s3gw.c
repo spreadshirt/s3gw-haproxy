@@ -159,7 +159,7 @@ static int get_bucket_objectkey(
 
 	int count_slashs = 0;
 
-	S3_LOG(NULL, LOG_INFO, "1");
+	S3_LOG(NULL, LOG_INFO, "txn->uri: %s", txn->uri);
 
 	end = txn->req.chn->buf->p + txn->req.sl.rq.u + txn->req.sl.rq.u_l;
 	start = ptr = http_get_path(txn);
