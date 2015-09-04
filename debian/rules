@@ -9,7 +9,8 @@ MAKEARGS=DESTDIR=debian/haproxy \
 	 DOCDIR=/usr/share/doc/haproxy \
 	 USE_PCRE=1 PCREDIR= \
 	 USE_OPENSSL=1 \
-	 USE_ZLIB=1
+	 USE_ZLIB=1 \
+         USE_S3GW=1
 
 OS_TYPE = $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 
