@@ -178,12 +178,8 @@ static int get_bucket_objectkey(
 		ptr++;
 	}
 
-	S3_LOG(NULL, LOG_INFO, "2");
-
 	if (count_slashs < 2 || *objectkey == NULL || *bucket == NULL)
 		return 1;
-
-	S3_LOG(NULL, LOG_INFO, "3");
 
 	if(*ptr == '?')
 		*object_len = ptr - *objectkey - 1;
