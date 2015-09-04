@@ -1,0 +1,2 @@
+misc:Depends=init-system-helpers (>= 1.13~)
+shlibs:Depends=libc6 (>= 2.15), libhiredis0.10 (>= 0.10.1), libpcre3, libssl1.0.0 (>= 1.0.1), zlib1g (>= 1:1.1.4)

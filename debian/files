@@ -1,0 +1,4 @@
+haproxy_1.5.14-1ppa~trusty_amd64.deb net optional
+haproxy-dbg_1.5.14-1ppa~trusty_amd64.deb debug extra
+haproxy-doc_1.5.14-1ppa~trusty_all.deb doc extra
+vim-haproxy_1.5.14-1ppa~trusty_all.deb net optional

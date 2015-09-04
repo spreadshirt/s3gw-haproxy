@@ -1,0 +1,207 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: haproxy
+Upstream-Contact: Willy Tarreau <w@1wt.eu>
+Source: http://haproxy.1wt.eu/
+
+Files: *
+Copyright: Copyright 2000-2013  Willy Tarreau <w@1wt.eu>.
+License: GPL-2+
+
+Files: ebtree/*
+       include/*
+       contrib/halog/fgets2.c
+Copyright: Copyright 2000-2013 Willy Tarreau - w@1wt.eu
+License: LGPL-2.1
+
+Files: include/proto/auth.h
+       include/types/checks.h
+       include/types/auth.h
+Copyright: Copyright 2008-2010 Krzysztof Piotr Oledzki <ole@ans.pl>
+License: GPL-2+
+
+Files: include/proto/shctx.h
+       src/shctx.c
+Copyright: Copyright (C) 2011-2012 EXCELIANCE
+License: GPL-2+
+
+Files: include/proto/compression.h
+       include/types/compression.h
+Copyright: Copyright 2012 (C) Exceliance, David Du Colombier <dducolombier@exceliance.fr>
+                                          William Lallemand <wlallemand@exceliance.fr>
+License: LGPL-2.1
+
+Files: include/proto/peers.h
+       include/proto/ssl_sock.h
+       include/types/peers.h
+       include/types/ssl_sock.h
+Copyright: Copyright (C) 2009-2012 EXCELIANCE, Emeric Brun <ebrun@exceliance.fr>
+License: LGPL-2.1
+
+
+Files: include/proto/sample.h
+       include/proto/stick_table.h
+       include/types/sample.h
+       include/types/stick_table.h
+Copyright: Copyright (C) 2009-2012 EXCELIANCE, Emeric Brun <ebrun@exceliance.fr>
+           Copyright (C) 2010-2013 Willy Tarreau <w@1wt.eu>
+License: LGPL-2.1
+
+Files: include/types/counters.h
+Copyright: Copyright 2008-2009 Krzysztof Piotr Oledzki <ole@ans.pl>
+           Copyright 2011 Willy Tarreau <w@1wt.eu>
+License: LGPL-2.1
+
+Files: include/common/base64.h
+       include/common/uri_auth.h
+       include/proto/signal.h
+       include/types/signal.h
+Copyright: Copyright 2000-2013 Willy Tarreau <w@1wt.eu>
+License: GPL-2+
+
+Files: include/common/rbtree.h
+Copyright: (C) 1999 Andrea Arcangeli <andrea@suse.de>
+License: GPL-2+
+
+Files: src/auth.c
+Copyright: Copyright 2010 Krzysztof Piotr Oledzki <ole@ans.pl>
+License: GPL-2+
+
+Files: src/base64.c
+       src/checks.c
+       src/dumpstats.c
+       src/server.c
+Copyright: Copyright 2000-2012 Willy Tarreau <w@1wt.eu>
+           Copyright 2007-2010 Krzysztof Piotr Oledzki <ole@ans.pl>
+License: GPL-2+
+
+Files: src/compression.c
+Copyright: Copyright 2012 (C) Exceliance, David Du Colombier <dducolombier@exceliance.fr>
+                                          William Lallemand <wlallemand@exceliance.fr>
+License: GPL-2+
+
+Files: src/haproxy-systemd-wrapper.c
+Copyright: Copyright 2013 Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
+License: GPL-2+
+
+Files: src/rbtree.c
+Copyright: (C) 1999 Andrea Arcangeli <andrea@suse.de>
+           (C) 2002 David Woodhouse <dwmw2@infradead.org>
+License: GPL-2+
+
+Files: src/sample.c
+       src/stick_table.c
+Copyright: Copyright 2009-2010 EXCELIANCE, Emeric Brun <ebrun@exceliance.fr>
+           Copyright (C) 2010-2012 Willy Tarreau <w@1wt.eu>
+License: GPL-2+
+
+Files: src/peers.c
+       src/ssl_sock.c
+Copyright: Copyright (C) 2010-2012 EXCELIANCE, Emeric Brun <ebrun@exceliance.fr>
+License: GPL-2+
+
+Files: include/common/sessionhash.h
+       src/sessionhash.c
+Copyright: Copyright 2007 Arnaud Cornet
+License: LGPL-2.1
+
+Files: src/appsession.c
+Copyright: Copyright 2004-2006 Alexander Lazic, Klaus Wagner
+           Copyright 2006-2009 Willy Tarreau
+License: GPL-2+
+
+Files: include/import/ip_tproxy.h
+Copyright: Copyright (c) 2002-2004 BalaBit IT Ltd.
+License: GPL-2
+
+Files: contrib/netsnmp-perl/haproxy.pl
+       contrib/base64/base64rev-gen.c
+Copyright: Copyright 2007-2010 Krzysztof Piotr Oledzki <ole@ans.pl>
+License: GPL-2+
+
+Files: examples/stats_haproxy.sh
+Copyright: Copyright 2007 Julien Antony and Matthieu Huguet
+License: GPL-2+
+
+Files: examples/check
+Copyright: 2006-2007 (C) Fabrice Dulaunoy <fabrice@dulaunoy.com>
+License: GPL-2+
+
+Files: tests/test_pools.c
+Copyright: Copyright 2007 Aleksandar Lazic <al-haproxy@none.at>
+License: GPL-2+
+
+Files: debian/*
+Copyright: Copyright (C) 2007-2011, Arnaud Cornet <acornet@debian.org>
+           Copyright (C) 2011, Christo Buschek <crito@30loops.net>
+           Copyright (C) 2013, Prach Pongpanich <prachpub@gmail.com>
+           Copyright (C) 2013-2014, Apollon Oikonomopoulos <apoikos@debian.org>
+           Copyright (C) 2013, Vincent Bernat <bernat@debian.org>
+License: GPL-2
+
+Files: debian/dconv/*
+Copyright: Copyright (C) 2012 Cyril Bonté
+License: Apache-2.0
+ 
+License: GPL-2+
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later
+ version.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+License: LGPL-2.1
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ .
+ On Debian systems, the complete text of the GNU Lesser General Public License,
+ version 2.1, can be found in /usr/share/common-licenses/LGPL-2.1.
+
+License: GPL-2
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+ .
+ On Debian systems, the complete text of the GNU General Public License, version
+ 2, can be found in /usr/share/common-licenses/GPL-2.
+
+License: Apache-2.0
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ .
+     http://www.apache.org/licenses/LICENSE-2.0
+ .
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ .
+ On Debian systems, the full text of the Apache License version 2.0 can be
+ found in the file `/usr/share/common-licenses/Apache-2.0'.

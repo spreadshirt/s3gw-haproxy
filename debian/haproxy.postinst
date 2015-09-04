@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+adduser --system --disabled-password --disabled-login --home /var/lib/haproxy \
+        --no-create-home --quiet --force-badname --group haproxy
+
+#DEBHELPER#
+
+if [ -n "$2" ] && dpkg --compare-versions "$2" gt "1.5~dev24-2~"; then
+	# Reload already running instances. Since 1.5~dev24-2 we do not stop
+	# haproxy in prerm during upgrades.
+	invoke-rc.d haproxy reload || true
+fi
+
+exit 0

@@ -1,0 +1,3 @@
+debian/vim-haproxy.yaml /usr/share/vim/registry
+debian/haproxy.vim /usr/share/vim/addons/ftdetect
+examples/haproxy.vim /usr/share/vim/addons/syntax

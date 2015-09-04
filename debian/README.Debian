@@ -1,0 +1,22 @@
+Binding non-local IPv6 addresses
+================================
+
+There are cases where HAProxy needs to bind() a non-existing address, like
+for example in high-availability setups with floating IP addresses (e.g. using
+keepalived or ucarp). For IPv4 the net.ipv4.ip_nonlocal_bind sysctl can be used
+to permit binding non-existing addresses, such a control does not exist for
+IPv6 however.
+
+The solution is to add the "transparent" parameter to the frontend's bind
+statement, for example:
+
+frontend fe1
+	bind 2001:db8:abcd:f00::1:8080 transparent
+
+This will require a recent Linux kernel (>= 2.6.28) with TPROXY support (Debian
+kernels will work correctly with this option).
+
+See /usr/share/doc/haproxy/configuration.txt.gz for more information on the
+"transparent" bind parameter.
+
+ -- Apollon Oikonomopoulos <apoikos@gmail.com>  Wed, 16 Oct 2013 21:18:58 +0300
