@@ -133,7 +133,7 @@ static const char *redisevent[HTTP_METH_OTHER] = {
 	NULL, /* HEAD */
 	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Post\",\"objectKey\":\"%b\"}", /* POST */
 	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Put\",\"objectKey\":\"%b\"}", /* PUT */
-	"LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Delete\",\"objectKey\":\"%b\"}", /* DELETE */
+	"LPUSH %s:%b {\"event\":\"s3:ObjectRemoved:Delete\",\"objectKey\":\"%b\"}", /* DELETE */
 };
 
 static const char *redis_copy_command = "LPUSH %s:%b {\"event\":\"s3:ObjectCreated:Copy\",\"objectKey\":\"%b\",\"source\":\"%b\"}";
