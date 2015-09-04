@@ -169,10 +169,11 @@ static int get_bucket_objectkey(
 
 	S3_LOG(NULL, LOG_INFO, "txn->uri: %s", txn->uri);
 
-	end = txn->req.chn->buf->p + txn->req.sl.rq.u + txn->req.sl.rq.u_l;
-	start = ptr = http_get_path(txn);
-	if (!ptr)
+	if (!txn->s3gw.path)
 		return 1;
+
+	start = ptr = txn->s3gw.path;
+	end = ptr + strlen(txn->s3gw.path);
 
 	while (ptr < end && *ptr != '?') {
 		if (*ptr == '/')

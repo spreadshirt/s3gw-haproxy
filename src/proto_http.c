@@ -236,6 +236,8 @@ struct http_res_action_kw_list http_res_keywords = {
  */
 struct chunk http_err_chunks[HTTP_ERR_SIZE];
 
+struct pool_head *pool2_s3path;
+
 /* this struct is used between calls to smp_fetch_hdr() or smp_fetch_cookie() */
 static struct hdr_ctx static_hdr_ctx;
 
@@ -331,6 +333,7 @@ void init_proto_http()
 
 	/* memory allocations */
 	pool2_requri = create_pool("requri", REQURI_LEN, MEM_F_SHARED);
+	pool2_s3path = create_pool("s3path", REQURI_LEN, MEM_F_SHARED);
 	pool2_uniqueid = create_pool("uniqueid", UNIQUEID_LEN, MEM_F_SHARED);
 }
 
@@ -2989,6 +2992,8 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 	memset(buffer, '\0', 1024);
 #ifdef USE_S3GW
 	if (global.s3.enabled) {
+		int path_len = 0;
+
 		if (likely(txn->meth != HTTP_METH_DELETE &&
 				txn->meth != HTTP_METH_POST &&
 				txn->meth != HTTP_METH_PUT)) {
@@ -3010,6 +3015,26 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 			txn->s3gw.copy_source = ctx.line + ctx.val;
 			txn->s3gw.copy_source_len = ctx.vlen;
 		}
+
+		if (unlikely(!txn->req.sl.rq.u_l)) {
+			/* no path - we can skip */
+			txn->s3gw.ignore = 1;
+			goto no_notification;
+		}
+
+		/* copy url path */
+		if (unlikely(path_len >= REQURI_LEN)) {
+			char *long_url = calloc(1, txn->req.sl.rq.u_l);
+			memcpy(long_url, req->buf->p + txn->req.sl.rq.u, txn->req.sl.rq.u_l);
+			send_log(NULL, LOG_ERR, "S3: URL path is too long. Url: %s\n", long_url);
+			free(long_url);
+			txn->s3gw.ignore = 1;
+			goto no_notification;
+		}
+		txn->s3gw.path = pool_alloc2(pool2_s3path);
+		path_len = txn->req.sl.rq.u_l;
+		memcpy(txn->s3gw.path, req->buf->p + txn->req.sl.rq.u, path_len);
+		txn->s3gw.path[path_len] = 0;
 	}
 no_notification:
 #endif /* S3GW */
@@ -8809,6 +8834,11 @@ void http_end_txn(struct session *s)
 	pool_free2(pool2_capture, txn->srv_cookie);
 	pool_free2(apools.sessid, txn->sessid);
 	pool_free2(pool2_uniqueid, s->unique_id);
+
+#ifdef USE_S3GW
+	pool_free2(pool2_s3path, txn->s3gw.path);
+	txn->s3gw.path = NULL;
+#endif /* USE_S3GW */
 
 	s->unique_id = NULL;
 	txn->sessid = NULL;
