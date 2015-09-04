@@ -1,0 +1,16 @@
+Package: vim-haproxy
+Source: haproxy
+Version: 1.5.14-1ppa~trusty
+Architecture: all
+Maintainer: Debian HAProxy Maintainers <pkg-haproxy-maintainers@lists.alioth.debian.org>
+Installed-Size: 70
+Recommends: vim-addon-manager
+Section: net
+Priority: optional
+Homepage: http://haproxy.1wt.eu/
+Description: syntax highlighting for HAProxy configuration files
+ The vim-haproxy package provides filetype detection and syntax highlighting
+ for HAProxy configuration files.
+ .
+ As per the Debian vim policy, installed addons are not activated
+ automatically, but the "vim-addon-manager" tool can be used for this purpose.

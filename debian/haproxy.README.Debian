@@ -1,0 +1,17 @@
+Syslog support
+--------------
+Upstream recommends using syslog over UDP to log from HAProxy processes, as
+this allows seamless logging from chroot'ed processes without access to
+/dev/log. However, many syslog implementations do not enable UDP syslog by
+default.
+
+The default HAProxy configuration in Debian uses /dev/log for logging and
+ships an rsyslog snippet that creates /dev/log in HAProxy's chroot and logs all
+HAProxy messages to /var/log/haproxy.log. To take advantage of this, you must
+restart rsyslog after installing this package. For other syslog daemons you
+will have to take manual measures to enable UDP logging or create /dev/log
+under HAProxy's chroot:
+a. For sysklogd, add SYSLOG="-a /var/lib/haproxy/dev/log" to
+   /etc/default/syslog.
+b. For inetutils-syslogd, add SYSLOGD_OPTS="-a /var/lib/haproxy/dev/log" to
+   /etc/default/inetutils-syslogd.

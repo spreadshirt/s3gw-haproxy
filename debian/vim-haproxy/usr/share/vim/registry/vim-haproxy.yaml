@@ -1,0 +1,5 @@
+addon: haproxy
+description: "Syntax highlighting for HAProxy"
+files:
+  - syntax/haproxy.vim
+  - ftdetect/haproxy.vim

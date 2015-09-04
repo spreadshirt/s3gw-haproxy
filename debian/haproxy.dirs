@@ -1,0 +1,4 @@
+etc/haproxy
+etc/haproxy/errors
+var/lib/haproxy
+var/lib/haproxy/dev

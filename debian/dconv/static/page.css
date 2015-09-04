@@ -1,0 +1,209 @@
+/* DOCS RESET
+-------------------------------------------------- */
+body,
+p,
+li {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* MASTHEAD
+-------------------------------------------------- */
+.masthead {
+  margin-bottom: 30px;
+}
+.masthead h1,
+.masthead p,
+.masthead div {
+  text-align: center;
+}
+.masthead h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.masthead p {
+  font-size: 18px;
+  line-height: 30px;
+}
+.masthead .introducing {
+  margin-bottom: 20px;
+}
+.masthead .tagline {
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #999;
+}
+
+/* BODY
+-------------------------------------------------- */
+body {
+	margin: 50px 0;
+}
+
+/* Links */
+.links {
+  min-height: 30px;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 5px 20px;
+  list-style: none;
+  text-align: center;
+  overflow: hidden;
+}
+.links:first-child {
+  min-height: 0;
+}
+.links li {
+  display: inline;
+  margin: 0 5px;
+  color: #999;
+}
+
+/* GitHub buttons */
+.github-btn {
+  margin-top: 30px;
+}
+
+/* FOOTER
+-------------------------------------------------- */
+.footer {
+  margin-top: 40px;
+  padding: 0;
+  border-top: 0;
+}
+.footer p {
+  text-align: center;
+}
+
+/* MISC
+-------------------------------------------------- */
+
+a.anchor {
+	display: block; position: relative; top: -40px; visibility: hidden;
+}
+
+/* Small lines after each section */
+.masthead:after,
+.body:after {
+  display: block;
+  content: '';
+  width: 100px;
+  height: 1px;
+  margin: 0 auto;
+  background-color: #eee;
+}
+
+.well-small ul {
+	padding: 0px;
+}
+.table th,
+.table td.pagination-centered {
+	text-align: center;
+}
+
+pre.text {
+        padding: 0;
+	font-size: 13px;
+	color: #000;
+	background: transparent;
+        border: none;
+        margin-bottom: 18px;
+}
+pre.arguments {
+        font-size: 13px;
+        color: #000;
+        background: transparent;
+}
+
+.comment {
+	color: #888;
+}
+small, .small {
+	color: #888;
+}
+.level1 {
+	font-size: 125%;
+}
+.sublevels {
+	border-left: 1px solid #ccc;
+	padding-left: 10px;
+}
+.tab {
+		padding-left: 20px;
+}
+.keyword  {
+    font-family: Menlo, Monaco, "Courier New", monospace;
+    white-space: pre;
+    background: #eee;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ccc;
+}
+#sidebar {
+position: relative;
+}
+
+.label-see-also {
+	background-color: #999;
+}
+.label-disabled {
+	background-color: #ccc;
+}
+h5 {
+	text-decoration: underline;
+}
+
+.example-desc {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 18px;
+}
+.noheight {
+	min-height: 0 !important;
+}
+.separator {
+    margin-bottom: 18px;
+}
+
+div {
+	word-wrap: break-word;
+}
+
+#menu-left {
+	width: 240px;
+	top: 0;
+	bottom: 0;
+	padding: 50px 0;
+	background: #f5f5f5;
+	border-right: 1px solid #ccc;
+	float: left;
+}
+
+#main {
+	margin-left: 240px;
+	width: 720px;
+}
+
+html, body {
+	width: 100%;
+	min-height: 100%:
+}
+
+.dropdown-menu > li {
+	white-space: nowrap;
+}
+/* TEMPORARILY HACKS WHILE PRE TAGS ARE USED
+-------------------------------------------------- */
+
+h5,
+.unpre,
+.example-desc,
+.dropdown-menu {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        white-space: normal;
+}
+
+.navbar-top {
+	background-image: none;
+	background-color: white;
+	border-bottom: 1px solid #999999;
+}

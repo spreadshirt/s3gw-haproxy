@@ -1,0 +1,2 @@
+version=3
+opts="uversionmangle=s/-(dev\d+)/~$1/" http://haproxy.1wt.eu/download/1.5/src/ haproxy-(1\.5\.\d+)\.(?:tgz|tbz2|tar\.(?:gz|bz2|xz))

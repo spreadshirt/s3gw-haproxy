@@ -1,0 +1,4 @@
+debian/haproxy.cfg etc/haproxy
+examples/errorfiles/*.http etc/haproxy/errors
+contrib/systemd/haproxy.service lib/systemd/system
+contrib/halog/halog usr/bin

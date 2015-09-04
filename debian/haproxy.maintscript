@@ -1,0 +1,1 @@
+mv_conffile /etc/rsyslog.d/haproxy.conf /etc/rsyslog.d/49-haproxy.conf 1.5.3-2~
