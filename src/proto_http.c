@@ -3005,7 +3005,7 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 
 		/* TODO: not use the first appearance, use the latest one */
 		ctx.idx = 0;
-		if (http_find_header2("X-Notifications", 14, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {
+		if (http_find_header2("X-Notifications", 15, txn->req.chn->buf->p, &txn->hdr_idx, &ctx)) {
 			if (ctx.vlen == 5 && strncasecmp(ctx.line + ctx.val, "False", 5)) {
 				txn->s3gw.ignore = 1;
 				goto no_notification;
