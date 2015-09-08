@@ -1,4 +1,3 @@
-0002-Use-dpkg-buildflags-to-build-halog.patch
 haproxy.service-start-after-syslog.patch
 haproxy.service-add-documentation.patch
 haproxy.service-check-config-before-reload.patch
