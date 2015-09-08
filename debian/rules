@@ -40,12 +40,6 @@ override_dh_auto_build-arch:
 	dh_auto_build -Dcontrib/halog
 
 override_dh_auto_build-indep:
-	# Build the HTML documentation, after patching dconv
-	patch -p1 < $(CURDIR)/debian/patches/debianize-dconv.patch
-	python -B $(CURDIR)/debian/dconv/haproxy-dconv.py \
-		-i $(CURDIR)/doc/configuration.txt \
-		-o $(CURDIR)/doc/configuration.html
-	patch -p1 -R < $(CURDIR)/debian/patches/debianize-dconv.patch
 
 override_dh_auto_clean:
 	make -C contrib/systemd clean
