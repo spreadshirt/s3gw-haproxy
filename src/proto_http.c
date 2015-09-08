@@ -2995,6 +2995,7 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 #ifdef USE_S3GW
 	if (global.s3.enabled) {
 		int path_len = 0;
+		memset(&txn->s3gw, 0, sizeof(txn->s3gw));
 
 		if (likely(txn->meth != HTTP_METH_DELETE &&
 				txn->meth != HTTP_METH_POST &&
