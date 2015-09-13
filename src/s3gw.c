@@ -65,7 +65,7 @@ static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status)
 	if (status == REDIS_OK) {
 		S3_LOG(NULL, LOG_INFO, "disconnect from redis.");
 	} else {
-		S3_LOG(NULL, LOG_INFO, "disconnect from redis. becuase of an error.");
+		S3_LOG(NULL, LOG_ERR, "disconnect from redis. because of an error.");
 		ctx = NULL;
 		schedule_redis_reconnect();
 	}
