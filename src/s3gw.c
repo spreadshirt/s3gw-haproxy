@@ -20,9 +20,11 @@
 
 static struct redisAsyncContext *ctx = NULL;
 static struct task *reconnect_task = NULL;
+static int redis_is_connected = 0;
 
 /* called by redis_reconnect task */
 static struct task *redis_reconnect(struct task *t) {
+	redis_is_connected = 0;
 	if (ctx) {
 		ctx = NULL;
 	}
@@ -62,17 +64,20 @@ static void redis_msg_cb(struct redisAsyncContext *ctx, void *anon_reply, void *
 }
 
 static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
+	ctx = NULL;
+	redis_is_connected = 0;
+
 	if (status == REDIS_OK) {
 		S3_LOG(NULL, LOG_INFO, "disconnect from redis.");
 	} else {
 		S3_LOG(NULL, LOG_ERR, "disconnect from redis. because of an error.");
-		ctx = NULL;
 		schedule_redis_reconnect();
 	}
 }
 
 static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
 	if (status == REDIS_OK) {
+		redis_is_connected = 1;
 		S3_LOG(NULL, LOG_INFO, "connected to redis.");
 	} else {
 		S3_LOG(NULL, LOG_ERR, "could not connect to redis!\n"
@@ -225,9 +230,8 @@ void s3gw_enqueue(struct http_txn *txn) {
 	assert(txn);
 
 	/* check if properly connected */
-	if (!ctx || ctx->err) {
+	if (!redis_is_connected || !ctx || ctx->err) {
 		/* only log at the moment */
-		schedule_redis_reconnect();
 		return;
 	}
 
