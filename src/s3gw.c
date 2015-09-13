@@ -13,12 +13,11 @@
 #include <types/s3gw.h>
 #include <types/task.h>
 
-#include <hiredis/async.h>
 #include <hiredis/hiredis.h>
 
 #define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "S3: " format "\n", ## __VA_ARGS__)
 
-static struct redisAsyncContext *ctx = NULL;
+static struct redisContext *ctx = NULL;
 static struct task *reconnect_task = NULL;
 static int redis_is_connected = 0;
 
@@ -26,10 +25,11 @@ static int redis_is_connected = 0;
 static struct task *redis_reconnect(struct task *t) {
 	redis_is_connected = 0;
 	if (ctx) {
+		redisFree(ctx);
 		ctx = NULL;
 	}
 
-	if (s3gw_connect()) {
+	if (s3gw_connect(0)) {
 		S3_LOG(NULL, LOG_ERR, "reconnect to redis failed. Retry in 1 second.");
 		t->expire = tick_add(now_ms, 10000);
 		return t;
@@ -56,42 +56,9 @@ static void schedule_redis_reconnect() {
 	task_schedule(reconnect_task, tick_add(now_ms, 1000)); /* try again in 1 second */
 }
 
-static void redis_msg_cb(struct redisAsyncContext *ctx, void *anon_reply, void *privdata) {
-	redisReply *reply = anon_reply;
-	if (reply->type == REDIS_REPLY_ERROR) {
-		S3_LOG(NULL, LOG_ERR, "redis message failed: %s", reply->str);
-	}
-}
-
-static void redis_disconnect_cb(const struct redisAsyncContext *ctx, int status) {
-	ctx = NULL;
-	redis_is_connected = 0;
-
-	if (status == REDIS_OK) {
-		S3_LOG(NULL, LOG_INFO, "disconnect from redis.");
-	} else {
-		S3_LOG(NULL, LOG_ERR, "disconnect from redis. because of an error.");
-		schedule_redis_reconnect();
-	}
-}
-
-static void redis_connect_cb(const struct redisAsyncContext *ctx, int status) {
-	if (status == REDIS_OK) {
-		redis_is_connected = 1;
-		S3_LOG(NULL, LOG_INFO, "connected to redis.");
-	} else {
-		S3_LOG(NULL, LOG_ERR, "could not connect to redis!\n"
-				      "redis errno %d"
-				      "redis errstr: %s", ctx->err, ctx->errstr);
-		ctx = NULL;
-		schedule_redis_reconnect();
-	}
-}
-
-
 /* return 0 if everything ok or wrong configured.
  * retcode is used to define if a reconnect is required. */
-int s3gw_connect() {
+int s3gw_connect(int initial) {
 	if (LIST_ISEMPTY(&global.s3.buckets)) {
 		send_log(NULL, LOG_ERR, "s3 notifications enabled but no buckets are defined. Disabling s3 notifications.");
 		global.s3.enabled = 0;
@@ -99,9 +66,9 @@ int s3gw_connect() {
 	}
 
 	if (global.s3.redis_ip && global.s3.redis_port) {
-		ctx = redisAsyncConnect(global.s3.redis_ip, global.s3.redis_port);
+		ctx = redisConnect(global.s3.redis_ip, global.s3.redis_port);
 	} else if (global.s3.redis_unix_path) {
-		ctx = redisAsyncConnectUnix(global.s3.redis_unix_path);
+		ctx = redisConnectUnix(global.s3.redis_unix_path);
 	} else {
 		send_log(NULL, LOG_ERR, "s3 notifications enabled but no redis server is configured.\n");
 		send_log(NULL, LOG_ERR, "configure a redis server or a unix path\n");
@@ -111,12 +78,12 @@ int s3gw_connect() {
 	}
 
 	if (!ctx || ctx->err) {
+		if (initial)
+			schedule_redis_reconnect();
 		return 1;
 	}
 
-	redisHaAttach(ctx);
-	redisAsyncSetConnectCallback(ctx, redis_connect_cb);
-	redisAsyncSetDisconnectCallback(ctx, redis_disconnect_cb);
+	redis_is_connected = 1;
 
 	return 0;
 }
@@ -125,7 +92,7 @@ void s3gw_deinit() {
 	global.s3.enabled = 0;
 
 	if (ctx) {
-		redisAsyncFree(ctx);
+		redisFree(ctx);
 		ctx = NULL;
 	}
 
@@ -218,14 +185,24 @@ static int check_bucket_valid_for_notification(const char *bucket, int bucket_le
 	return 0;
 }
 
+static void check_redis_state(redisReply *reply) {
+	if (!reply) {
+		return;
+	}
+	if (reply->type == REDIS_REPLY_ERROR) {
+		S3_LOG(NULL, LOG_ERR, "redis message failed: %s", reply->str);
+		schedule_redis_reconnect();
+	}
+}
+
 /* enqueue the message */
 void s3gw_enqueue(struct http_txn *txn) {
 	int ret = 0;
+	redisReply *reply = NULL;
 	const char *bucket = "";
 	int bucket_len = 0;
 	const char *objectkey = "";
 	int objectkey_len = 0;
-	void *privdata = NULL;
 
 	assert(txn);
 
@@ -248,10 +225,11 @@ void s3gw_enqueue(struct http_txn *txn) {
 			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
 				return;
 			}
-			ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[txn->meth],
+			reply = redisCommand(ctx, redisevent[txn->meth],
 						global.s3.bucket_prefix,
 						bucket, bucket_len,
 						objectkey, objectkey_len);
+			check_redis_state(reply);
 			break;
 		case HTTP_METH_PUT:
 			S3_LOG(NULL, LOG_INFO, "enqueue on PUT");
@@ -269,16 +247,19 @@ void s3gw_enqueue(struct http_txn *txn) {
 			if (txn->s3gw.copy_source) {
 				S3_LOG(NULL, LOG_INFO, "publish notification");
 
-				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redis_copy_command,
+				reply = redisCommand(ctx, redis_copy_command,
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
 							objectkey, objectkey_len,
 							txn->s3gw.copy_source);
+				check_redis_state(reply);
+
 			} else {
-				ret = redisAsyncCommand(ctx, &redis_msg_cb, privdata, redisevent[txn->meth],
+				reply = redisCommand(ctx, redisevent[txn->meth],
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
 							objectkey, objectkey_len);
+				check_redis_state(reply);
 			}
 			break;
 		default:

@@ -3,7 +3,8 @@
 
 struct http_txn;
 
-int s3gw_connect();
+/* inital = 1 if called form main haproxy */
+int s3gw_connect(int initial);
 void s3gw_deinit();
 void s3gw_enqueue(struct http_txn *txn);
 

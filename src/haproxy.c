@@ -1672,7 +1672,7 @@ int main(int argc, char **argv)
 
 #ifdef USE_S3GW
 	if (global.s3.enabled)
-		s3gw_connect();
+		s3gw_connect(1);
 #endif /* USE_S3GW */
 
 	/*
