@@ -15,7 +15,7 @@
 
 #include <hiredis/hiredis.h>
 
-#define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "S3: " format "\n", ## __VA_ARGS__)
+#define S3_LOG(proxy, level, format, ...) send_log(proxy, level, "[s3] " format "\n", ## __VA_ARGS__)
 
 static struct redisContext *ctx = NULL;
 static struct task *reconnect_task = NULL;
@@ -30,7 +30,7 @@ static struct task *redis_reconnect(struct task *t) {
 	}
 
 	if (s3gw_connect(0)) {
-		S3_LOG(NULL, LOG_ERR, "reconnect to redis failed. Retry in 1 second.");
+		S3_LOG(NULL, LOG_ERR, "reconnect to Redis failed. Retry in 1 second.");
 		t->expire = tick_add(now_ms, 10000);
 		return t;
 	} else {
@@ -70,8 +70,8 @@ int s3gw_connect(int initial) {
 	} else if (global.s3.redis_unix_path) {
 		ctx = redisConnectUnix(global.s3.redis_unix_path);
 	} else {
-		send_log(NULL, LOG_ERR, "s3 notifications enabled but no redis server is configured.\n");
-		send_log(NULL, LOG_ERR, "configure a redis server or a unix path\n");
+		send_log(NULL, LOG_ERR, "s3 notifications enabled but no Redis server is configured.\n");
+		send_log(NULL, LOG_ERR, "configure a Redis server or a unix path\n");
 		send_log(NULL, LOG_ERR, "Disabling s3 notifications.\n");
 		global.s3.enabled = 0;
 		return 0;
@@ -190,7 +190,7 @@ static void check_redis_state(redisReply *reply) {
 		return;
 	}
 	if (reply->type == REDIS_REPLY_ERROR) {
-		S3_LOG(NULL, LOG_ERR, "redis message failed: %s", reply->str);
+		S3_LOG(NULL, LOG_ERR, "Redis message failed: %s", reply->str);
 		schedule_redis_reconnect();
 	}
 }
@@ -222,9 +222,15 @@ void s3gw_enqueue(struct http_txn *txn) {
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
+			S3_LOG(NULL, LOG_INFO, "object key: '%s'", objectkey);
+
 			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
+				S3_LOG(NULL, LOG_INFO, "bucket '%s' not enabled for notifications", bucket);
 				return;
 			}
+
+			S3_LOG(NULL, LOG_INFO, "publish notification");
+
 			reply = redisCommand(ctx, redisevent[txn->meth],
 						global.s3.bucket_prefix,
 						bucket, bucket_len,
@@ -232,12 +238,10 @@ void s3gw_enqueue(struct http_txn *txn) {
 			check_redis_state(reply);
 			break;
 		case HTTP_METH_PUT:
-			S3_LOG(NULL, LOG_INFO, "enqueue on PUT");
-
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
-			S3_LOG(NULL, LOG_INFO, "object key: %s", objectkey);
+			S3_LOG(NULL, LOG_INFO, "object key: '%s'", objectkey);
 
 			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
 				S3_LOG(NULL, LOG_INFO, "bucket '%s' not enabled for notifications", bucket);
@@ -245,7 +249,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 			}
 
 			if (txn->s3gw.copy_source) {
-				S3_LOG(NULL, LOG_INFO, "publish notification");
+				S3_LOG(NULL, LOG_INFO, "publish notification (with copy source)");
 
 				reply = redisCommand(ctx, redis_copy_command,
 							global.s3.bucket_prefix,
@@ -255,6 +259,8 @@ void s3gw_enqueue(struct http_txn *txn) {
 				check_redis_state(reply);
 
 			} else {
+				S3_LOG(NULL, LOG_INFO, "publish notification");
+
 				reply = redisCommand(ctx, redisevent[txn->meth],
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
@@ -269,6 +275,6 @@ void s3gw_enqueue(struct http_txn *txn) {
 	}
 
 	if (ret != REDIS_OK) {
-		S3_LOG(NULL, LOG_ERR, "could not enque redis");
+		S3_LOG(NULL, LOG_ERR, "could not enqueue notification");
 	}
 }

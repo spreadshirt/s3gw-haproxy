@@ -3018,7 +3018,7 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 			if (unlikely(ctx.vlen >= REQURI_LEN)) {
 				char *long_url = calloc(1, ctx.vlen);
 				memcpy(long_url, ctx.line + ctx.val, ctx.vlen);
-				send_log(NULL, LOG_ERR, "S3: x-amz-copy-source is too long. Url: %s\n", long_url);
+				send_log(NULL, LOG_ERR, "[s3] x-amz-copy-source is too long. Url: %s\n", long_url);
 				free(long_url);
 				txn->s3gw.ignore = 1;
 				goto no_notification;
@@ -3038,7 +3038,7 @@ int http_wait_for_request(struct session *s, struct channel *req, int an_bit)
 		if (unlikely(path_len >= REQURI_LEN)) {
 			char *long_url = calloc(1, txn->req.sl.rq.u_l);
 			memcpy(long_url, req->buf->p + txn->req.sl.rq.u, txn->req.sl.rq.u_l);
-			send_log(NULL, LOG_ERR, "S3: URL path is too long. Url: %s\n", long_url);
+			send_log(NULL, LOG_ERR, "[s3] URL path is too long. Url: %s\n", long_url);
 			free(long_url);
 			txn->s3gw.ignore = 1;
 			goto no_notification;
