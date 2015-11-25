@@ -2,7 +2,7 @@ haproxy (1.5.14-1s3~trusty) trusty; urgency=medium
 
   * Rebuild for S3 support.
 
- -- Ansgar Jazdzewski <ajaz@spreadshirt.net> Fri, 04 Sep 2015 10:55:28 +0200
+ -- Ansgar Jazdzewski <ajaz@spreadshirt.net>  Fri, 04 Sep 2015 10:55:28 +0200
 
 haproxy (1.5.14-1ppa~trusty) trusty; urgency=medium
 
