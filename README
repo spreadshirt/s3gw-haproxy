@@ -1,3 +1,14 @@
+# s3gw-haproxy
+
+The s3gw-haproxy adds S3 bucket notifications for Ceph Rados GW. It basically works by
+putting the HAProxy infront of the rgw.
+
+TODO: write a nice readme that explains all the details
+
+----------------------------------------------------------------------------------------
+                               ORIGINAL REAMDE
+----------------------------------------------------------------------------------------
+
                          ----------------------
                              HAProxy how-to
                          ----------------------
@@ -226,7 +237,7 @@ There is some documentation in the doc/ directory :
       syntax (keywords, units). It also describes the log and stats format. It
       is normally always up to date. If you see that something is missing from
       it, please report it as this is a bug. Please note that this file is
-      huge and that it's generally more convenient to review Cyril Bonté's
+      huge and that it's generally more convenient to review Cyril BontÃ©'s
       HTML translation online here :
 
            http://cbonte.github.io/haproxy-dconv/configuration-1.5.html
