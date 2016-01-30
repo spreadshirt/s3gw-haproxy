@@ -7,14 +7,20 @@ See README.orig for the original HAProxy README.
 
 TODO: write a nice readme that explains all the details
 
-# checkout
+## checkout
+'''
 cd /usr/src
 git clone https://github.com/spreadshirt/s3gw-haproxy
+'''
 
-# build
+## build
+'''
 cd s3gw-haproxy
 dpkg-buildpackage -us -uc -b
+'''
 
-# install
+## install
+'''
 cd ..
 dpkg -i haproxy*.deb
+'''
