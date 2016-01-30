@@ -7,25 +7,25 @@ See [README.orig](README.orig) for the original HAProxy README.
 
 TODO: write a nice readme that explains all the details
 
-## checkout
+## Checkout
 ```
 cd /usr/src
 git clone https://github.com/spreadshirt/s3gw-haproxy
 ```
 
-## build
+## Build
 ```
 cd s3gw-haproxy
 dpkg-buildpackage -us -uc -b
 ```
 
-## install
+## Install
 ```
 cd ..
 dpkg -i haproxy*.deb
 ```
 
-## configure
+## Configure
 
 To enable bucket notifications, adjust the global section of your ```haproxy.cfg```. The notifications must be enabled in general and individual per bucket.
 
@@ -40,7 +40,7 @@ global
         s3.buckets mybucket2
 ```
 
-## notifications
+## Notifications
 
 The notifications for PUT, POST and DELETE operations are published to a redis queue with the name ```<s3.bucket_prefix>:<bucket-name>``` where ```<buckt-name>``` is the name of the actual bucket, e.g. a queue name could be like ```s3notifications:mybucket```. The notification itself is a simple JSON with the fields event (what happened) and objectKey (to which object).
 
