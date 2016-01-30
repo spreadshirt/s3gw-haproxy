@@ -39,3 +39,16 @@ global
         s3.buckets mybucket1
         s3.buckets mybucket2
 ```
+
+## notifications
+
+The notifications for PUT, POST and DELETE operations are published to a redis queue with the name ```<s3.bucket_prefix>:<bucket-name>``` where ```<buckt-name>``` is the actual name of the actual bucket, e.g.  ```s3notifications:mybucket```.
+
+Example notification:
+```
+{
+  "event": "s3:ObjectCreated:Put",
+  "objectKey": "foobar"
+}
+```
+
