@@ -42,7 +42,7 @@ global
 
 ## notifications
 
-The notifications for PUT, POST and DELETE operations are published to a redis queue with the name ```<s3.bucket_prefix>:<bucket-name>``` where ```<buckt-name>``` is the name of the actual bucket, e.g.  ```s3notifications:mybucket```. The notification itself is a simple JSON with the fields event (what happened) and objectKey (to which object).
+The notifications for PUT, POST and DELETE operations are published to a redis queue with the name ```<s3.bucket_prefix>:<bucket-name>``` where ```<buckt-name>``` is the name of the actual bucket, e.g. a queue name could be like ```s3notifications:mybucket```. The notification itself is a simple JSON with the fields event (what happened) and objectKey (to which object).
 
 Example notification:
 ```
