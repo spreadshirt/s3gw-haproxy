@@ -5,6 +5,19 @@ putting the HAProxy infront of the rgw.
 
 TODO: write a nice readme that explains all the details
 
+# checkout
+cd /usr/src
+git clone https://github.com/spreadshirt/s3gw-haproxy
+
+# build
+cd s3gw-haproxy
+dpkg-buildpackage -us -uc -b
+
+# install
+cd ..
+dpkg -i haproxy*.deb
+
+
 ----------------------------------------------------------------------------------------
                                ORIGINAL REAMDE
 ----------------------------------------------------------------------------------------
