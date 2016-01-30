@@ -14,9 +14,9 @@ global
 	s3.enable
 	s3.redis_ip 127.0.0.1
 	s3.redis_port 6379
-	s3.bucket_prefix bucket
+	s3.bucket_prefix s3notifcations
 	s3.buckets foo
-	s3.buckets bar-fe80-eu
+	s3.buckets bar
 
 defaults
 	log	global
