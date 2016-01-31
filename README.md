@@ -56,4 +56,4 @@ Example notification:
 | --- | --- | --- | --- |
 | event | type | String (fixed set) | `s3:ObjectCreated:Put`<br>`s3:ObjectCreated:Post`<br>`s3:ObjectCreated:Copy`<br>`s3:ObjectRemoved:Delete` |
 | objectKey | key of created or deleted object | String | (see S3 documentation for possible values) |
-| source | only for PUT operations; value of `x-amz-copy-source header` (if set) (see http://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectCOPY.html) | String | `/<bucketName>/<objectKey>` |
+| source | only for PUT operations; value of `x-amz-copy-source header` (if set) (see [RESTObjectCopy](http://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectCOPY.html)) | String | `/<bucketName>/<objectKey>` |
