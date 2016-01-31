@@ -42,7 +42,7 @@ global
 
 ## Notifications
 
-The notifications for PUT, POST and DELETE operations are published to a redis queue with the name ```<s3.bucket_prefix>:<bucket-name>``` where ```<buckt-name>``` is the name of the actual bucket, e.g. a queue name could be like ```s3notifications:mybucket```. The notification itself is a simple JSON with the fields event (what happened) and objectKey (to which object).
+The notifications for PUT, POST and DELETE operations are published (LPUSH) to a redis queue with the name ```<s3.bucket_prefix>:<bucket-name>``` where ```<bucket-name>``` is the name of the actual bucket, e.g. a queue name could be like ```s3notifications:mybucket```. The notification itself is a simple JSON with the fields event (what happened) and objectKey (to which object).
 
 Example notification:
 ```
@@ -52,3 +52,7 @@ Example notification:
 }
 ```
 
+| Field name | Description | Data Type | Possible Values |
+| --- | --- | --- | --- |
+| event | type | String (fixed set) | s3:ObjectCreated:Put, s3:ObjectCreated:Post, s3:ObjectCreated:Copy, s3:ObjectRemoved:Delete |
+| objectKey | key of created or deleted object | String | (see S3 documentation for possible values) |
