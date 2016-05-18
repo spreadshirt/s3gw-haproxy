@@ -162,7 +162,7 @@ static int get_bucket_objectkey(
 		return 1;
 
 	if(*ptr == '?')
-		*object_len = ptr - *objectkey - 1;
+		*object_len = ptr - *objectkey;
 	else if (ptr == end)
 		*object_len = ptr - *objectkey;
 
@@ -218,11 +218,15 @@ void s3gw_enqueue(struct http_txn *txn) {
 
 	switch (txn->meth) {
 		case HTTP_METH_DELETE:
+			if (strstr(txn->uri, "?uploadId=") != NULL) {
+                S3_LOG(NULL, LOG_INFO, "skip notification for multipart abort");
+                return;
+            }
 		case HTTP_METH_POST:
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
-			S3_LOG(NULL, LOG_INFO, "object key: '%s'", objectkey);
+			S3_LOG(NULL, LOG_INFO, "object key: '%s', len: %d", objectkey, objectkey_len);
 
 			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
 				S3_LOG(NULL, LOG_INFO, "bucket '%s' not enabled for notifications", bucket);
@@ -241,7 +245,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
-			S3_LOG(NULL, LOG_INFO, "object key: '%s'", objectkey);
+			S3_LOG(NULL, LOG_INFO, "object key: '%s', len: %d", objectkey, objectkey_len);
 
 			if (!check_bucket_valid_for_notification(bucket, bucket_len)) {
 				S3_LOG(NULL, LOG_INFO, "bucket '%s' not enabled for notifications", bucket);
