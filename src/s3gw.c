@@ -102,10 +102,9 @@ void s3gw_deinit() {
 	}
 }
 
-/* TODO: add bucket prefix once started not for every message could safe a lot */
 /* using %b makes it possible to use pointer + len like copy_source is */
 /* WARNING: this must match the HTTP_METH */
-static const char *redisevent[HTTP_METH_OTHER] = {
+static const char *redis_commands[HTTP_METH_OTHER] = {
 	NULL, /* NONE */
 	NULL, /* OPTIONS */
 	NULL, /* GET */
@@ -235,7 +234,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 
 			S3_LOG(NULL, LOG_INFO, "publish notification");
 
-			reply = redisCommand(ctx, redisevent[txn->meth],
+			reply = redisCommand(ctx, redis_commands[txn->meth],
 						global.s3.bucket_prefix,
 						bucket, bucket_len,
 						objectkey, objectkey_len);
@@ -265,7 +264,7 @@ void s3gw_enqueue(struct http_txn *txn) {
 			} else {
 				S3_LOG(NULL, LOG_INFO, "publish notification");
 
-				reply = redisCommand(ctx, redisevent[txn->meth],
+				reply = redisCommand(ctx, redis_commands[txn->meth],
 							global.s3.bucket_prefix,
 							bucket, bucket_len,
 							objectkey, objectkey_len);
