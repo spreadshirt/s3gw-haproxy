@@ -1,3 +1,10 @@
+haproxy (1.5.14-1s3-1~trusty) trusty; urgency=medium
+
+  * New release including the following changes:
+    - MAJOR: s3 bucket notifications: support for multipart upload
+
+ -- Jens Hadlich <jns@spreadshirt.net>  Thu, 19 May 2016 06:55:28 +0200
+
 haproxy (1.5.14-1s3~trusty) trusty; urgency=medium
 
   * Rebuild for S3 support.
