@@ -5,8 +5,6 @@ putting the HAProxy infront of the rgw.
 
 See [README_ORIG](README_ORIG) for the original HAProxy README.
 
-TODO: write a nice readme that explains all the details
-
 ## Checkout
 ```
 cd /usr/src
