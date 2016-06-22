@@ -1,3 +1,10 @@
+haproxy (1.5.14-1s3-2~trusty) trusty; urgency=medium
+
+  * New release including the following changes:
+    - BUG/MAJOR: s3 bucket notifications, multipart: only publish notifications when completed
+
+ -- Jens Hadlich <jns@spreadshirt.net>  Thu, 22 Jun 2016 13:45:28 +0200
+
 haproxy (1.5.14-1s3-1~trusty) trusty; urgency=medium
 
   * New release including the following changes:
