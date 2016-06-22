@@ -217,11 +217,17 @@ void s3gw_enqueue(struct http_txn *txn) {
 
 	switch (txn->meth) {
 		case HTTP_METH_DELETE:
-			if (strstr(txn->uri, "?uploadId=") != NULL) {
-                S3_LOG(NULL, LOG_INFO, "skip notification for multipart abort");
-                return;
-            }
+			if (strstr(txn->uri, "uploadId=") != NULL) {
+				S3_LOG(NULL, LOG_INFO, "skip notification for multipart ABORT");
+				return;
+			}
 		case HTTP_METH_POST:
+			if (strstr(txn->uri, "?uploads") != NULL) {
+				S3_LOG(NULL, LOG_INFO, "skip notification for multipart INITIATE");
+				return;
+			}
+			// allow multipart COMPLETE (uri contains "uploadId=")
+
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
@@ -241,6 +247,10 @@ void s3gw_enqueue(struct http_txn *txn) {
 			check_redis_state(reply);
 			break;
 		case HTTP_METH_PUT:
+			if (strstr(txn->uri, "uploadId=") != NULL) {
+				S3_LOG(NULL, LOG_INFO, "skip notification for multipart UPLOAD PART");
+				return;
+			}
 			if (get_bucket_objectkey(txn, &bucket, &bucket_len, &objectkey, &objectkey_len)) {
 				return;
 			}
